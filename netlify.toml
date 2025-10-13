@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist" # For Vite / if you use CRA use "build"
+
+# Redirect all routes to index.html (for React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+

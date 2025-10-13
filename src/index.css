@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Remove blue highlight / tap flash effect on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none; /* Prevents long-press context menu on images/links */
+}
+
+.new-font {
+  font-family: "Libre Baskerville";
+}
+.maroon-color {
+  color: #8b0000;
+}
+.maroon-background {
+  background-color: #8b0000;
+}
