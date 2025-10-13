@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Home, Info, Phone } from "lucide-react";
-import Logo from "../../assets/MAJ_Logo_for_web.png";
+import Logo from "../../assets/MAJ_Logo_for_Web.png";
 import photos from "../../assets/DSC_8896.JPG";
 
 const categoriesSource = [
