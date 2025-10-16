@@ -72,9 +72,33 @@ export default function Hero() {
 
   const transition = { type: "tween", duration: 0.6, ease: "easeInOut" };
 
+  // Skeleton loader component
+  const SkeletonSlide = ({ width = "100%", height = "500px", dots }) => (
+    <div className="relative w-full" style={{ height }}>
+      <div className="absolute inset-0 bg-gray-200 rounded-lg overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
+      </div>
+      {/* Dots as placeholders */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+        {dots.map((_, index) => (
+          <div key={index} className="w-3 h-3 rounded-full bg-gray-300" />
+        ))}
+      </div>
+    </div>
+  );
+
   if (!loaded) {
     return (
-      <div className="w-full h-[300px] md:h-[500px] bg-gray-200 animate-pulse rounded-lg" />
+      <div className="p-4 md:p-10 mt-0 md:mt-20 w-full">
+        {/* Desktop skeleton */}
+        <div className="hidden md:block">
+          <SkeletonSlide height="500px" dots={slidesDesktop} />
+        </div>
+        {/* Mobile skeleton */}
+        <div className="block md:hidden">
+          <SkeletonSlide height="300px" dots={slidesMobile} />
+        </div>
+      </div>
     );
   }
 
@@ -154,6 +178,19 @@ export default function Hero() {
           ))}
         </div>
       </div>
+
+      {/* Shimmer effect styles */}
+      <style>{`
+        .animate-shimmer {
+          background: linear-gradient(90deg, rgba(229,229,229,1) 0%, rgba(200,200,200,0.6) 50%, rgba(229,229,229,1) 100%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
     </div>
   );
 }
