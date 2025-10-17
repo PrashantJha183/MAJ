@@ -1,9 +1,24 @@
 import Hero from "../components/homepage/Hero";
-const HomepagevIew = () => {
+// import Reel from "../components/homepage/Reel";
+import Gift from "../components/homepage/Gift";
+import ErrorBoundary from "../components/base/ErrorBoundary"; // adjust path if needed
+
+const HomepageView = () => {
   return (
     <>
-      <Hero />
+      <ErrorBoundary>
+        <Hero />
+      </ErrorBoundary>
+
+      {/* <ErrorBoundary>
+        <Reel />
+      </ErrorBoundary> */}
+
+      <ErrorBoundary>
+        <Gift />
+      </ErrorBoundary>
     </>
   );
 };
-export default HomepagevIew;
+
+export default HomepageView;

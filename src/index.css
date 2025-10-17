@@ -16,3 +16,30 @@
 .maroon-background {
   background-color: #8b0000;
 }
+.maroon-gradient {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.15) 0%,
+    /* left fade start */ rgba(255, 255, 255, 0.15) 5%,
+    /* keep left fade longer */ #ffdade 35%,
+    /* solid maroon starts earlier */ #ffdade 85%,
+    /* solid maroon ends before right fade */ rgba(255, 255, 255, 0.15) 100%
+      /* right fade */
+  );
+
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.15) 5%,
+      #8b0000 35%,
+      #8b0000 85%,
+      rgba(255, 255, 255, 0.15) 100%
+    )
+    1;
+
+  backdrop-filter: blur(4px);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+}
