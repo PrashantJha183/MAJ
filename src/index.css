@@ -2,9 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 /* Remove blue highlight / tap flash effect on mobile */
+/* Remove scrollbar globally while keeping scroll functional */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Optional: Prevent mobile tap highlight and long-press menu */
 * {
   -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none; /* Prevents long-press context menu on images/links */
+  -webkit-touch-callout: none;
 }
 
 .new-font {
@@ -42,4 +53,63 @@
   backdrop-filter: blur(4px);
   padding: 1rem 1.5rem;
   border-radius: 12px;
+}
+
+.screen-height {
+  height: 100vh;
+}
+
+.band-bg {
+  background: linear-gradient(to bottom, #fff9f9 0%, #ffffff 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.new-arrival-screen {
+  width: 30vw;
+  height: 70vh;
+}
+.sound-icon {
+  font-size: 2rem;
+}
+
+.play-icon {
+  font-size: 3rem;
+}
+
+.new-arrival-bg {
+  background: linear-gradient(to bottom, #fff9f9, #fff);
+}
+
+.white-bg {
+  background-color: #fff9f9;
+}
+
+/* Hide scrollbar but keep scrolling functional */
+.flex {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.flex::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+  .screen-height {
+    height: 80vh;
+  }
+
+  .new-arrival-screen {
+    width: auto;
+    height: 70vh;
+  }
+
+  .sound-icon {
+    font-size: 1.5rem;
+  }
+
+  .play-icon {
+    font-size: 2rem;
+  }
 }

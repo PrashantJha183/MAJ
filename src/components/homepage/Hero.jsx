@@ -105,7 +105,7 @@ export default function Hero() {
   return (
     <div className="w-full relative p-4 md:p-10 mt-0 md:mt-20" {...handlers}>
       {/* Desktop / Tablet */}
-      <div className="hidden md:block w-full relative overflow-hidden rounded-lg h-[500px]">
+      <div className="hidden md:block w-full relative overflow-hidden rounded-lg h-screen">
         <AnimatePresence initial={false} mode="wait">
           <motion.img
             key={slidesDesktop[current]}

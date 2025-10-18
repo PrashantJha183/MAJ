@@ -91,7 +91,7 @@ const Reel = () => {
       className="w-full flex justify-center mt-10 px-4 overflow-hidden"
     >
       {/* Carousel Wrapper */}
-      <div className="relative flex items-center justify-center w-full max-w-5xl h-[70vh]">
+      <div className="relative flex items-center justify-center w-full max-w-5xl screen-height">
         {/* Left Reel (Previous) */}
         <motion.div
           key={`left-${getReel(-1).id}`}

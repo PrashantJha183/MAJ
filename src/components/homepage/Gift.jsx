@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, memo } from "react";
 import { motion } from "framer-motion";
 import image from "../../assets/DSC_8896.JPG";
 
-// Gift.jsx — Minimalistic & Optimized Gift Section with Responsive Animation
+// Gift.jsx — Minimalistic & Optimized Gift Section with Responsive Animation + LQIP Blur-Up + Skeleton Loader
 
 const IMAGES = [
   { id: "birthday", title: "Birthday", src: image, alt: "Birthday gift" },
@@ -46,7 +46,6 @@ const Card = memo(({ item, showTextAlways }) => {
   const handleImgLoad = useCallback(() => setLoaded(true), []);
 
   return (
-    // Added `group` so children can use group-hover for the bottom overlay.
     <motion.div
       className="group relative overflow-hidden rounded-md shadow-md bg-white-40 backdrop-blur-sm"
       initial={{ opacity: 0, y: 60 }}
@@ -55,7 +54,27 @@ const Card = memo(({ item, showTextAlways }) => {
       viewport={{ once: false, amount: 0.3 }}
       whileHover={!showTextAlways ? { scale: 1.03 } : {}}
     >
-      {/* Image */}
+      {/* LQIP placeholder (same image, highly blurred) */}
+      {!loaded && (
+        <img
+          src={item.src}
+          alt={item.alt}
+          className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-80"
+          draggable={false}
+        />
+      )}
+
+      {/* Skeleton shimmer loader overlay for image & text */}
+      {!loaded && (
+        <div className="absolute inset-0 bg-gray-300/40 animate-pulse overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-5 rounded-md bg-gray-200/60 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
+          </div>
+        </div>
+      )}
+
+      {/* Main Image (high resolution) */}
       <img
         src={item.src}
         alt={item.alt}
@@ -65,28 +84,42 @@ const Card = memo(({ item, showTextAlways }) => {
         height={800}
         draggable={false}
         className={`w-full h-60 md:h-72 lg:h-80 object-cover transition-all duration-700 ease-out transform-gpu ${
-          loaded ? "blur-0 scale-100" : "blur-2xl scale-105"
+          loaded ? "opacity-100 blur-0 scale-100" : "opacity-0"
         }`}
       />
 
-      {/* Bottom overlay
-          - Uses CSS transitions and group-hover so it slides up from bottom on desktop hover.
-          - On mobile (showTextAlways === true) overlay is visible by default.
-          - Using an explicit rgba background via Tailwind arbitrary value to ensure cross-device opacity works.
-      */}
+      {/* Bottom overlay */}
       <motion.div
-        // remove framer hover animations here; CSS (group-hover) handles the hover translation/fade so it comes from bottom
         transition={{ duration: 0.3 }}
         className={`absolute bottom-0 md:bottom-2 left-0 w-full px-4 py-3 text-center text-white backdrop-blur-md transition-all duration-300 transform ${
           showTextAlways
             ? "opacity-100 translate-y-0 low-bg-laptop"
-            : "opacity-0 translate-y-5 low-bg  group-hover:opacity-100 group-hover:translate-y-0"
+            : "opacity-0 translate-y-5 low-bg group-hover:opacity-100 group-hover:translate-y-0"
         }`}
       >
-        <h3 className="text-lg font-semibold tracking-wide drop-shadow-md">
-          {item.title}
-        </h3>
+        {loaded ? (
+          <h3 className="text-lg font-semibold tracking-wide drop-shadow-md">
+            {item.title}
+          </h3>
+        ) : (
+          // Text skeleton shimmer placeholder
+          <div className="mx-auto w-24 h-5 rounded-md bg-gray-200/60 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
+          </div>
+        )}
       </motion.div>
+
+      {/* Shimmer animation keyframes */}
+      <style jsx>{`
+        @keyframes shine {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}</style>
     </motion.div>
   );
 });
@@ -123,7 +156,7 @@ export default function Gift() {
           Discover timeless jewellery crafted to celebrate every precious
           occasion — elegant, meaningful, and uniquely yours.
         </h2>
-        <p className="mt-2 maroon-color maroon-gradient py-4 max-w-8xl mx-auto  text-xl md:text-4xl font-extrabold">
+        <p className="mt-2 maroon-color maroon-gradient py-4 max-w-8xl mx-auto text-xl md:text-4xl font-extrabold">
           PERFECT GIFT SHOW
         </p>
       </motion.header>
