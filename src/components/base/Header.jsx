@@ -6,38 +6,32 @@ import Logo from "../../assets/MAJ_Logo_for_Web.png";
 import photos from "../../assets/DSC_8896.JPG";
 
 const categoriesSource = [
-  { name: "Rings", img: photos, alt: "Rings" },
-  {
-    name: "Necklaces",
-    img: photos,
-    alt: "Necklaces",
-  },
-  { name: "Pendants", img: photos, alt: "Pendants" },
-  { name: "Earrings", img: photos, alt: "Earrings" },
-  {
-    name: "Bracelets",
-    img: photos,
-    alt: "Bracelets",
-  },
+  { name: "Rings", img: photos, alt: "Rings", Link: "/products" },
+  { name: "Necklaces", img: photos, alt: "Necklaces", Link: "/products" },
+  { name: "Pendants", img: photos, alt: "Pendants", Link: "/products" },
+  { name: "Earrings", img: photos, alt: "Earrings", Link: "/products" },
+  { name: "Bracelets", img: photos, alt: "Bracelets", Link: "/products" },
 ];
 
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3C/svg%3E";
 
-// Category Item with lazy load & skeleton
-// Category Item with skeleton loader and local images fix
+// Optimized Category Item Component with shimmer + blur loading effect
 const CategoryItem = React.memo(function CategoryItem({ item }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <div className="flex flex-col items-center min-w-[70px]">
-      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-yellow-500 shadow-sm bg-gray-100 flex items-center justify-center m-2 transition-transform duration-300 hover:scale-105">
-        {!loaded && <div className="animate-pulse w-full h-full bg-gray-200" />}
+      <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-yellow-500 shadow-sm bg-gray-100 flex items-center justify-center m-2 transition-transform duration-300 hover:scale-105">
+        {!loaded && (
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]" />
+        )}
+
         <img
           src={item.img || FALLBACK_SRC}
           alt={item.alt || item.name}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${
-            loaded ? "opacity-100" : "opacity-0"
+          className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
+            loaded ? "blur-0 opacity-100" : "blur-lg opacity-40"
           }`}
           loading="lazy"
           onLoad={() => setLoaded(true)}
@@ -81,17 +75,15 @@ const Header = () => {
           <div className="flex items-center flex-1">
             <Link
               to="/"
-              className="inline-flex items-center" // reduced space: 2 for mobile, 4 for desktop
+              className="inline-flex items-center"
               aria-label="Go to homepage"
             >
               <div className="relative w-24 md:w-36 h-12 md:h-20 flex-shrink-0">
-                {" "}
-                {/* slightly smaller width/height for mobile */}
                 <img
                   src={Logo}
                   alt="Mahadeo Sah Amarnath Jewellers Logo"
                   className="object-contain w-full h-full"
-                  loading="lazy"
+                  loading="eager"
                   onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
                 />
               </div>
@@ -114,8 +106,9 @@ const Header = () => {
 
           {/* CENTER - Search */}
           <div className="flex-1 flex justify-center px-4">
+            {/* Desktop Search */}
             <form
-              className="hidden md:flex items-center w-full max-w-xl bg-white border rounded-full px-3 py-1 shadow-sm"
+              className="hidden md:flex items-center w-full max-w-xl bg-white border rounded-full px-3 py-1.5 shadow-sm"
               onSubmit={onSearchSubmit}
             >
               <Search className="text-gray-500 mr-2" />
@@ -128,10 +121,10 @@ const Header = () => {
               />
             </form>
 
-            {/* Mobile fake search */}
+            {/* Mobile Search Button */}
             <button
               onClick={openSearchMobile}
-              className="md:hidden w-full max-w-lg flex items-center justify-center bg-white border rounded-full px-3 py-1 shadow-sm"
+              className="md:hidden w-full max-w-lg flex items-center justify-center bg-white border rounded-full px-4 py-2 shadow-sm"
               aria-label="Open search"
             >
               <Search className="text-gray-600 mr-2" />
@@ -139,9 +132,9 @@ const Header = () => {
             </button>
           </div>
 
-          {/* RIGHT - Desktop nav + Mobile menu */}
+          {/* RIGHT - Navigation */}
           <div className="flex-1 flex justify-end items-center">
-            {/* Desktop nav */}
+            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-6 font-medium">
               <Link
                 to="/"
@@ -175,7 +168,7 @@ const Header = () => {
               </Link>
             </nav>
 
-            {/* Mobile hamburger */}
+            {/* Mobile Menu Button */}
             <div className="md:hidden ml-2">
               <button
                 onClick={toggleMenu}
@@ -207,7 +200,9 @@ const Header = () => {
         <div className="hidden md:block border-t bg-gray-50">
           <div className="max-w-screen-xl mx-auto flex items-center justify-center gap-6 py-3 px-4 overflow-x-auto">
             {categories.map((c) => (
-              <CategoryItem key={c.name} item={c} />
+              <Link key={c.name} to={c.Link} className="pointer-events-auto">
+                <CategoryItem item={c} />
+              </Link>
             ))}
           </div>
         </div>
@@ -231,7 +226,7 @@ const Header = () => {
               autoFocus
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 text-sm focus:outline-none"
+              className="flex-1 text-base focus:outline-none"
               placeholder="Search for rings, necklaces..."
             />
             <button
@@ -289,20 +284,21 @@ const Header = () => {
           <nav className="p-4 space-y-4">
             <div className="pt-4 flex flex-col gap-3">
               {categories.map((c) => (
-                <button
+                <Link
                   key={c.name}
+                  to={c.Link}
                   onClick={closeMenu}
-                  className="flex items-center gap-4 px-3 py-2 rounded-md w-full text-md"
+                  className="flex items-center gap-4 px-3 py-2 rounded-md w-full text-md pointer-events-auto"
                 >
                   <img
                     src={c.img}
                     alt={c.name}
-                    className="w-14 h-14 rounded-full object-cover"
+                    className="w-14 h-14 rounded-full object-cover transition-all duration-500 ease-in-out"
                     loading="lazy"
                     onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
                   />
                   <span className="flex-1 text-left">{c.name}</span>
-                </button>
+                </Link>
               ))}
             </div>
           </nav>

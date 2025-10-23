@@ -1,9 +1,7 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import React from "react";
+import { Facebook, Instagram } from "lucide-react";
 
 const footerLinks = [
-  { label: "Home", href: "#" },
   { label: "About Us", href: "#about" },
   { label: "Collections", href: "#collections" },
   { label: "Contact", href: "#contact" },
@@ -12,40 +10,35 @@ const footerLinks = [
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  {
+    icon: Facebook,
+    href: "https://www.facebook.com/share/1adnrV18Fy/",
+    label: "Facebook",
+  },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/maj_rajnagar",
+    label: "Instagram",
+  },
 ];
 
 const Footer = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-100px" });
   const currentYear = new Date().getFullYear();
 
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.15 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
-    <footer
-      ref={ref}
-      className="maroon-background text-white py-16 px-6 new-font"
-    >
-      <motion.div
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        variants={containerVariants}
-        className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between gap-10"
-      >
+    <footer className="relative maroon-background text-white py-16 px-6 new-font overflow-hidden">
+      {/* Blurred Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center blur-md opacity-30"
+        style={{
+          backgroundImage: "url('/assets/footer-bg.jpg')",
+        }}
+      ></div>
+
+      {/* Main Content */}
+      <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between gap-10">
         {/* Brand & Description */}
-        <motion.div variants={itemVariants} className="flex-1">
+        <div className="flex-1">
           <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-3">
             Mahadeo Sah Amarnath Jewellers
           </h2>
@@ -53,77 +46,73 @@ const Footer = () => {
             Crafting timeless jewelry since 1911, celebrating heritage, trust,
             and exquisite craftsmanship for generations.
           </p>
-        </motion.div>
+        </div>
 
         {/* Footer Links */}
-        <motion.div variants={itemVariants} className="flex-1">
+        <div className="flex-1">
           <h3 className="font-semibold mb-3 text-gray-100">Quick Links</h3>
           <ul className="flex flex-col gap-2">
             {footerLinks.map((link, idx) => (
-              <motion.li
-                key={idx}
-                variants={itemVariants}
-                whileHover={{ x: 5, color: "#FFD700" }}
-                className="transition-all cursor-pointer"
-              >
+              <li key={idx} className="transition-all cursor-pointer">
                 <a
                   href={link.href}
                   className="text-gray-100 hover:text-yellow-200"
                 >
                   {link.label}
                 </a>
-              </motion.li>
+              </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* Social Media */}
-        <motion.div variants={itemVariants} className="flex-1">
-          <h3 className="font-semibold mb-3 text-gray-100">Follow Us</h3>
-          <div className="flex gap-4 mt-2">
+      {/* Footer Bottom */}
+      <div className="relative mt-12 text-gray-100 text-sm md:text-base border-t border-gray-500 pt-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+          {/* Mobile First Order */}
+          {/* Social Icons (top in mobile) */}
+          <div className="order-1 md:order-3 w-full md:w-1/3 flex justify-center md:justify-end gap-4">
             {socialLinks.map((social, idx) => {
               const Icon = social.icon;
               return (
-                <motion.a
+                <a
                   key={idx}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.2, color: "#FFD700" }}
                   className="text-gray-100 w-8 h-8 flex items-center justify-center rounded-full hover:bg-yellow-300 transition-colors"
                   aria-label={social.label}
                 >
-                  <Icon className="w-5 h-5" />
-                </motion.a>
+                  <Icon className="w-6 h-6" />
+                </a>
               );
             })}
           </div>
-        </motion.div>
-      </motion.div>
-      {/* Footer Bottom */}
-      <motion.div
-        variants={itemVariants}
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ delay: 0.5 }}
-        className="mt-12 text-gray-100 text-sm md:text-base border-t border-gray-500 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-center md:text-left"
-      >
-        <p>
-          © {currentYear} Mahadeo Sah Amarnath Jewellers. All Rights Reserved.
-        </p>
-        <p>
-          Designed & Developed by{" "}
-          <a
-            href="https://www.bazaardigital.in/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-yellow-300"
-          >
-            Bazaar Digital
-          </a>
-        </p>
-      </motion.div>
+
+          {/* Copyright (middle in mobile) */}
+          <div className="order-2 md:order-1 w-full md:w-1/3 flex justify-center md:justify-start">
+            <p>
+              © {currentYear} Mahadeo Sah Amarnath Jewellers. All Rights
+              Reserved.
+            </p>
+          </div>
+
+          {/* Designed & Developed (bottom in mobile) */}
+          <div className="order-3 md:order-2 w-full md:w-1/3 flex justify-center">
+            <p>
+              Designed & Developed by{" "}
+              <a
+                href="https://www.bazaardigital.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-yellow-300"
+              >
+                Bazaar Digital
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 };
