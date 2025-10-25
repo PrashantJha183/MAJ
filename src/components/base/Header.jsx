@@ -3,14 +3,25 @@ import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Home, Info, Phone } from "lucide-react";
 import Logo from "../../assets/MAJ_Logo_for_Web.png";
-import photos from "../../assets/DSC_8896.JPG";
+import ring from "../../assets/Jewellery/DSC_9099.JPG";
+import maangtika from ".././../assets/Jewellery/DSC_8885.JPG";
+import nathani from "../../assets/Jewellery/DSC_8925.JPG";
+import earrings from "../../assets/Jewellery/DSC_9084.JPG";
+import necklace from "../../assets/Jewellery/DSC_9118.JPG";
+import managlsutra from "../../assets/Jewellery/DSC_9030.JPG";
 
 const categoriesSource = [
-  { name: "Rings", img: photos, alt: "Rings", Link: "/products" },
-  { name: "Necklaces", img: photos, alt: "Necklaces", Link: "/products" },
-  { name: "Pendants", img: photos, alt: "Pendants", Link: "/products" },
-  { name: "Earrings", img: photos, alt: "Earrings", Link: "/products" },
-  { name: "Bracelets", img: photos, alt: "Bracelets", Link: "/products" },
+  { name: "Rings", img: ring, alt: "Rings", link: "/products" },
+  { name: "Necklaces", img: necklace, alt: "Necklaces", link: "/products" },
+  { name: "Earrings", img: earrings, alt: "Earrings", link: "/products" },
+  {
+    name: "Mangalsutra",
+    img: managlsutra,
+    alt: "Mangalsutra",
+    link: "/products",
+  },
+  { name: "Maangtika", img: maangtika, alt: "Maangtika", link: "/products" },
+  { name: "Nathani", img: nathani, alt: "Nathani", link: "/products" },
 ];
 
 const FALLBACK_SRC =
@@ -31,7 +42,7 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
           src={item.img || FALLBACK_SRC}
           alt={item.alt || item.name}
           className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
-            loaded ? "blur-0 opacity-100" : "blur-lg opacity-40"
+            loaded ? "blur-0 opacity-100" : "blur-2xl opacity-0"
           }`}
           loading="lazy"
           onLoad={() => setLoaded(true)}
@@ -105,9 +116,9 @@ const Header = () => {
           </div>
 
           {/* CENTER - Search */}
-          <div className="flex-1 flex justify-center px-4">
-            {/* Desktop Search */}
-            <form
+          {/* <div className="flex-1 flex justify-center px-4"> */}
+          {/* Desktop Search */}
+          {/* <form
               className="hidden md:flex items-center w-full max-w-xl bg-white border rounded-full px-3 py-1.5 shadow-sm"
               onSubmit={onSearchSubmit}
             >
@@ -119,10 +130,10 @@ const Header = () => {
                 placeholder="Search jewelry, rings, necklaces..."
                 className="w-full text-sm focus:outline-none"
               />
-            </form>
+            </form> */}
 
-            {/* Mobile Search Button */}
-            <button
+          {/* Mobile Search Button */}
+          {/* <button
               onClick={openSearchMobile}
               className="md:hidden w-full max-w-lg flex items-center justify-center bg-white border rounded-full px-4 py-2 shadow-sm"
               aria-label="Open search"
@@ -130,7 +141,7 @@ const Header = () => {
               <Search className="text-gray-600 mr-2" />
               <span className="text-sm text-gray-600">Search</span>
             </button>
-          </div>
+          </div> */}
 
           {/* RIGHT - Navigation */}
           <div className="flex-1 flex justify-end items-center">
@@ -209,7 +220,7 @@ const Header = () => {
       </header>
 
       {/* MOBILE SEARCH PANEL */}
-      <div
+      {/* <div
         className={`fixed left-0 right-0 top-16 z-40 md:hidden transition-transform duration-300 ${
           searchOpenMobile
             ? "transform translate-y-0"
@@ -238,7 +249,7 @@ const Header = () => {
             </button>
           </form>
         </div>
-      </div>
+      </div> */}
 
       {/* MOBILE MENU */}
       <div

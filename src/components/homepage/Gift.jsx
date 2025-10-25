@@ -1,19 +1,26 @@
 import React, { useEffect, useState, useCallback, memo } from "react";
 import { motion } from "framer-motion";
 import image from "../../assets/DSC_8896.JPG";
-
+import anniversary from "../../assets/Jewellery/DSC_9066.JPG";
+import wedding from "../../assets/Jewellery/DSC_9062.JPG";
+import engagement from "../../assets/Jewellery/DSC_9086.JPG";
 // Gift.jsx — Minimalistic & Optimized Gift Section with Responsive Animation + LQIP Blur-Up + Skeleton Loader
 
 const IMAGES = [
   { id: "birthday", title: "Birthday", src: image, alt: "Birthday gift" },
-  { id: "wedding", title: "Wedding", src: image, alt: "Wedding gift" },
+  { id: "wedding", title: "Wedding", src: wedding, alt: "Wedding gift" },
   {
     id: "anniversary",
     title: "Anniversary",
-    src: image,
+    src: anniversary,
     alt: "Anniversary gift",
   },
-  { id: "engagement", title: "Engagement", src: image, alt: "Engagement gift" },
+  {
+    id: "engagement",
+    title: "Engagement",
+    src: engagement,
+    alt: "Engagement gift",
+  },
 ];
 
 // --- Utility to preload images ---
@@ -59,7 +66,7 @@ const Card = memo(({ item, showTextAlways }) => {
         <img
           src={item.src}
           alt={item.alt}
-          className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-80"
+          className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-0"
           draggable={false}
         />
       )}

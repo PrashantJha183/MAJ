@@ -3,7 +3,8 @@ import Hero from "../components/homepage/Hero";
 import Gift from "../components/homepage/Gift";
 import ErrorBoundary from "../components/base/ErrorBoundary";
 import Band from "../components/homepage/Band";
-import NewArrivals from "../components/homepage/NewArrivals";
+import BestSellers from "../components/homepage/BestSellers";
+// import NewArrivals from "../components/homepage/NewArrivals";
 const HomepageView = () => {
   return (
     <>
@@ -15,7 +16,7 @@ const HomepageView = () => {
         <Reel />
       </ErrorBoundary> */}
       <ErrorBoundary>
-        <NewArrivals />
+        <BestSellers />
       </ErrorBoundary>
 
       <ErrorBoundary>
@@ -26,9 +27,9 @@ const HomepageView = () => {
         <Band />
       </ErrorBoundary>
 
-      <ErrorBoundary>
+      {/* <ErrorBoundary>
         <NewArrivals />
-      </ErrorBoundary>
+      </ErrorBoundary> */}
     </>
   );
 };

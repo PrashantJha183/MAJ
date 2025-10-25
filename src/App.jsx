@@ -14,7 +14,7 @@ const Product = lazy(() => import("./view/ProductpageView"));
 const ScrollToTop = ({ children }) => {
   const location = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "none" });
+    window.scrollTo({ top: 0 });
   }, [location.pathname]);
   return children;
 };
