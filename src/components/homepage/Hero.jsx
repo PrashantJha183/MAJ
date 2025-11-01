@@ -2,32 +2,37 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import hero1 from "../../assets/MAJ_Desktop.jpg";
 import hero2 from "../../assets/MAJ Desktop 2.jpg";
+import hero3 from "../../assets/MAJ Desktop 3.jpg";
+import hero4 from "../../assets/MAJ Desktop 4.jpg";
+
 import mobile1 from "../../assets/MAJ_Mobile_Banner.jpg";
 import mobile2 from "../../assets/MAJ Mobile Banner 2.jpg";
+import mobile3 from "../../assets/MAJ Mobile Banner 3.jpg";
+import mobile4 from "../../assets/MAJ Mobile Banner 4.jpg";
 
-const slidesDesktop = [hero1, hero2];
-const slidesMobile = [mobile1, mobile2];
+const slidesDesktop = [hero1, hero2, hero3, hero4];
+const slidesMobile = [mobile1, mobile2, mobile3, mobile4];
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const [direction, setDirection] = useState(0); // 1 for next, -1 for prev
+  const [direction, setDirection] = useState(0);
   const totalSlides = slidesDesktop.length;
 
   // Preload images
   useEffect(() => {
-    const desktopImgs = slidesDesktop.map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
-    const mobileImgs = slidesMobile.map((src) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
+    const preload = (srcs) =>
+      srcs.map((src) => {
+        const img = new Image();
+        img.src = src;
+        return img;
+      });
+
+    const desktopImgs = preload(slidesDesktop);
+    const mobileImgs = preload(slidesMobile);
 
     Promise.all(
       [...desktopImgs, ...mobileImgs].map(
@@ -42,9 +47,7 @@ export default function Hero() {
 
   // Auto slide every 5 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 5000);
+    const interval = setInterval(() => handleNext(), 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -64,37 +67,27 @@ export default function Hero() {
     trackMouse: true,
   });
 
-  const slideVariants = {
-    enter: (dir) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 1 }),
-    center: { x: "0%", opacity: 1 },
-    exit: (dir) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 1 }),
-  };
-
-  const transition = { type: "tween", duration: 0.6, ease: "easeInOut" };
-
-  // Skeleton loader component
-  const SkeletonSlide = ({ width = "100%", height = "500px", dots }) => (
+  // Skeleton loader
+  const SkeletonSlide = ({ height = "500px", dots }) => (
     <div className="relative w-full" style={{ height }}>
       <div className="absolute inset-0 bg-gray-200 rounded-lg overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer" />
       </div>
-      {/* Dots as placeholders */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-        {dots.map((_, index) => (
-          <div key={index} className="w-3 h-3 rounded-full bg-gray-300" />
+        {dots.map((_, i) => (
+          <div key={i} className="w-3 h-3 rounded-full bg-gray-300" />
         ))}
       </div>
     </div>
   );
 
+  // Show placeholder fixed height before images load (prevents layout shift)
   if (!loaded) {
     return (
       <div className="p-4 md:p-10 mt-0 md:mt-20 w-full">
-        {/* Desktop skeleton */}
         <div className="hidden md:block">
           <SkeletonSlide height="500px" dots={slidesDesktop} />
         </div>
-        {/* Mobile skeleton */}
         <div className="block md:hidden">
           <SkeletonSlide height="300px" dots={slidesMobile} />
         </div>
@@ -105,19 +98,24 @@ export default function Hero() {
   return (
     <div className="w-full relative p-4 md:p-10 mt-0 md:mt-20" {...handlers}>
       {/* Desktop / Tablet */}
-      <div className="hidden md:block w-full relative overflow-hidden rounded-lg h-screen">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={slidesDesktop[current]}
-            src={slidesDesktop[current]}
-            alt={`Hero Banner Desktop ${current + 1}`}
-            className="w-full h-full object-cover rounded-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
-        </AnimatePresence>
+      <div
+        className="hidden md:block w-full relative overflow-hidden rounded-lg"
+        style={{ height: "800px" }}
+      >
+        <div className="absolute inset-0">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.img
+              key={slidesDesktop[current]}
+              src={slidesDesktop[current]}
+              alt={`Hero Banner Desktop ${current + 1}`}
+              className="w-full h-full object-cover rounded-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+          </AnimatePresence>
+        </div>
 
         {/* Navigation Arrows */}
         <button
@@ -125,23 +123,24 @@ export default function Hero() {
           className="absolute top-1/2 -translate-y-1/2 left-4 bg-yellow-600 text-white rounded-full p-2 shadow-lg hover:bg-yellow-700 transition"
           aria-label="Previous Slide"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={50} />
         </button>
+
         <button
           onClick={handleNext}
           className="absolute top-1/2 -translate-y-1/2 right-4 bg-yellow-600 text-white rounded-full p-2 shadow-lg hover:bg-yellow-700 transition"
           aria-label="Next Slide"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={50} />
         </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+        {/* Dots (centered within image area, not container) */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-6 z-10">
           {slidesDesktop.map((_, index) => (
             <div
               key={index}
               className={`w-3 h-3 rounded-full transition-all ${
-                index === current ? "bg-yellow-600" : "bg-gray-300"
+                index === current ? "bg-yellow-600 w-12" : "bg-gray-300"
               }`}
             />
           ))}
@@ -149,27 +148,32 @@ export default function Hero() {
       </div>
 
       {/* Mobile */}
-      <div className="block md:hidden w-full relative overflow-hidden rounded-lg h-[300px]">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={slidesMobile[current]}
-            src={slidesMobile[current]}
-            alt={`Hero Banner Mobile ${current + 1}`}
-            className="w-full h-full object-cover rounded-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-          />
-        </AnimatePresence>
+      <div
+        className="block md:hidden w-full relative overflow-hidden rounded-lg"
+        style={{ height: "300px" }}
+      >
+        <div className="absolute inset-0">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.img
+              key={slidesMobile[current]}
+              src={slidesMobile[current]}
+              alt={`Hero Banner Mobile ${current + 1}`}
+              className="w-full h-full object-cover rounded-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            />
+          </AnimatePresence>
+        </div>
 
-        {/* Dots */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-2">
+        {/* Dots (centered in image) */}
+        <div className="absolute bottom-3 left-40 -translate-x-1/3 flex space-x-3 z-10">
           {slidesMobile.map((_, index) => (
             <div
               key={index}
               className={`w-2 h-2 rounded-full transition-all ${
-                index === current ? "bg-yellow-600" : "bg-gray-300"
+                index === current ? "bg-yellow-600 w-8" : "bg-gray-300"
               }`}
             />
           ))}

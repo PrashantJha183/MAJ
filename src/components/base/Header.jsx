@@ -21,13 +21,13 @@ const categoriesSource = [
     link: "/products",
   },
   { name: "Maangtika", img: maangtika, alt: "Maangtika", link: "/products" },
-  { name: "Nathani", img: nathani, alt: "Nathani", link: "/products" },
+  { name: "Nath", img: nathani, alt: "Nathani", link: "/products" },
 ];
 
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3C/svg%3E";
 
-// Optimized Category Item Component with shimmer + blur loading effect
+// Category item with shimmer
 const CategoryItem = React.memo(function CategoryItem({ item }) {
   const [loaded, setLoaded] = useState(false);
 
@@ -37,7 +37,6 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
         {!loaded && (
           <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]" />
         )}
-
         <img
           src={item.img || FALLBACK_SRC}
           alt={item.alt || item.name}
@@ -62,24 +61,10 @@ const Header = () => {
   const categories = useMemo(() => categoriesSource, []);
 
   const toggleMenu = useCallback(() => setMenuOpen((s) => !s), []);
-  const openSearchMobile = useCallback(() => {
-    setSearchOpenMobile(true);
-    setMenuOpen(false);
-  }, []);
-  const closeSearchMobile = useCallback(() => setSearchOpenMobile(false), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
-  const onSearchSubmit = useCallback(
-    (e) => {
-      e?.preventDefault();
-      console.log("search submit:", searchQuery);
-      setSearchOpenMobile(false);
-    },
-    [searchQuery]
-  );
 
   return (
     <>
-      {/* HEADER */}
       <header className="w-full bg-white fixed top-0 z-50 border-b new-font">
         <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 md:px-4 py-3 md:py-4">
           {/* LEFT - Logo */}
@@ -115,37 +100,8 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* CENTER - Search */}
-          {/* <div className="flex-1 flex justify-center px-4"> */}
-          {/* Desktop Search */}
-          {/* <form
-              className="hidden md:flex items-center w-full max-w-xl bg-white border rounded-full px-3 py-1.5 shadow-sm"
-              onSubmit={onSearchSubmit}
-            >
-              <Search className="text-gray-500 mr-2" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search jewelry, rings, necklaces..."
-                className="w-full text-sm focus:outline-none"
-              />
-            </form> */}
-
-          {/* Mobile Search Button */}
-          {/* <button
-              onClick={openSearchMobile}
-              className="md:hidden w-full max-w-lg flex items-center justify-center bg-white border rounded-full px-4 py-2 shadow-sm"
-              aria-label="Open search"
-            >
-              <Search className="text-gray-600 mr-2" />
-              <span className="text-sm text-gray-600">Search</span>
-            </button>
-          </div> */}
-
-          {/* RIGHT - Navigation */}
+          {/* RIGHT - Nav */}
           <div className="flex-1 flex justify-end items-center">
-            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-6 font-medium">
               <Link
                 to="/"
@@ -188,17 +144,17 @@ const Header = () => {
                 className="relative w-8 h-8 flex items-center justify-center focus:outline-none"
               >
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-300 ${
+                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-200 ease-out ${
                     menuOpen ? "rotate-45" : "-translate-y-2"
                   }`}
                 />
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-opacity duration-300 ${
+                  className={`block absolute w-6 h-0.5 bg-black transform transition-opacity duration-200 ease-out ${
                     menuOpen ? "opacity-0" : "opacity-100"
                   }`}
                 />
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-300 ${
+                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-200 ease-out ${
                     menuOpen ? "-rotate-45" : "translate-y-2"
                   }`}
                 />
@@ -211,45 +167,13 @@ const Header = () => {
         <div className="hidden md:block border-t bg-gray-50">
           <div className="max-w-screen-xl mx-auto flex items-center justify-center gap-6 py-3 px-4 overflow-x-auto">
             {categories.map((c) => (
-              <Link key={c.name} to={c.Link} className="pointer-events-auto">
+              <Link key={c.name} to={c.link} className="pointer-events-auto">
                 <CategoryItem item={c} />
               </Link>
             ))}
           </div>
         </div>
       </header>
-
-      {/* MOBILE SEARCH PANEL */}
-      {/* <div
-        className={`fixed left-0 right-0 top-16 z-40 md:hidden transition-transform duration-300 ${
-          searchOpenMobile
-            ? "transform translate-y-0"
-            : "transform -translate-y-3 opacity-0 pointer-events-none"
-        }`}
-      >
-        <div className="mx-4 mb-2 bg-white shadow-lg border rounded-lg p-3">
-          <form
-            onSubmit={onSearchSubmit}
-            className="flex items-center space-x-2"
-          >
-            <Search className="text-gray-500" />
-            <input
-              autoFocus
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 text-base focus:outline-none"
-              placeholder="Search for rings, necklaces..."
-            />
-            <button
-              type="button"
-              onClick={closeSearchMobile}
-              className="text-sm text-gray-600 px-3 py-1"
-            >
-              Close
-            </button>
-          </form>
-        </div>
-      </div> */}
 
       {/* MOBILE MENU */}
       <div
@@ -258,24 +182,23 @@ const Header = () => {
       >
         <div
           onClick={closeMenu}
-          className={`absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-200 ease-out ${
             menuOpen
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           }`}
         />
         <aside
-          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ${
+          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform transition-transform duration-200 ease-out ${
             menuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="p-4 flex items-center justify-between border-b">
-            <h2 className="text-lg font-medium">Menu</h2>
+          <div className="p-4 flex items-center justify-end">
             <button
               onClick={closeMenu}
               className="w-8 h-8 flex items-center justify-center"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M18 6L6 18"
                   stroke="currentColor"
@@ -293,11 +216,11 @@ const Header = () => {
           </div>
 
           <nav className="p-4 space-y-4">
-            <div className="pt-4 flex flex-col gap-3">
+            <div className="pt-2 flex flex-col gap-3">
               {categories.map((c) => (
                 <Link
                   key={c.name}
-                  to={c.Link}
+                  to={c.link}
                   onClick={closeMenu}
                   className="flex items-center gap-4 px-3 py-2 rounded-md w-full text-md pointer-events-auto"
                 >
@@ -357,7 +280,6 @@ const Header = () => {
         </div>
       </nav>
 
-      {/* Spacer to prevent overlap */}
       <div className="pt-0 md:pt-20 pb-0 md:pb-0" />
     </>
   );

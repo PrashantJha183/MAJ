@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { BadgeCheck, Shield } from "lucide-react";
 
+// Lazy-load heavy image component (code-splitting)
+const ImageWithPlaceholder = lazy(() => import("../base/ImageWithPlaceholder"));
+
+// Local assets
 import ring from "../../assets/Jewellery/DSC_9105.JPG";
 import necklace from "../../assets/Jewellery/DSC_9041.JPG";
 import earrings from "../../assets/Jewellery/DSC_8974.JPG";
 import mangalsutra from "../../assets/Jewellery/DSC_9010.JPG";
 
-// Sample best-seller data
 const bestSellers = [
   { id: 1, name: "Ring", img: ring },
   { id: 2, name: "Necklace Set", img: necklace },
@@ -16,61 +19,49 @@ const bestSellers = [
   { id: 4, name: "Mangalsutra", img: mangalsutra },
 ];
 
-// Preload image function
-const preloadImage = (src) =>
-  new Promise((resolve) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = resolve;
-  });
-
-// Image placeholder component (LQIP effect)
-const ImageWithPlaceholder = ({ src, alt }) => {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    preloadImage(src).then(() => {
-      if (isMounted) setLoaded(true);
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [src]);
-
-  return (
-    <div className="relative w-full h-80 sm:h-72 md:h-64 overflow-hidden rounded-lg bg-gray-200">
-      {/* LQIP placeholder (blurred) */}
-      <img
-        src={src}
-        alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover blur-2xl transition-opacity duration-500 ${
-          loaded ? "opacity-0" : "opacity-100"
-        }`}
-      />
-      {/* Actual image */}
-      <img
-        src={src}
-        alt={alt}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-          loaded ? "opacity-100" : "opacity-0"
-        }`}
-      />
-    </div>
-  );
-};
+// Simple skeleton shimmer loader
+const Skeleton = ({
+  height = "h-6",
+  width = "w-full",
+  rounded = "rounded-md",
+}) => (
+  <div
+    className={`bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse ${height} ${width} ${rounded}`}
+  />
+);
 
 const BestSellers = () => {
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    // simulate small loading phase for text (real world: data fetch)
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Container + Item animations
   const container = {
     hidden: {},
-    show: { transition: { staggerChildren: 0.15 } },
+    show: {
+      transition: { staggerChildren: 0.15 },
+    },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 50 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 90,
+        damping: 10,
+        mass: 0.6,
+        bounce: 0.35,
+      },
+    },
   };
 
   return (
@@ -80,7 +71,7 @@ const BestSellers = () => {
       </h2>
 
       <motion.div
-        className="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4"
         variants={container}
         initial="hidden"
         animate={inView ? "show" : "hidden"}
@@ -89,35 +80,63 @@ const BestSellers = () => {
           <motion.div
             key={product.id}
             variants={item}
-            className="flex flex-col shadow-lg rounded-lg overflow-hidden bg-white hover:shadow-2xl transition-shadow duration-300"
+            className="flex flex-col shadow-lg rounded-lg overflow-hidden bg-white  transition-shadow duration-300"
           >
-            <ImageWithPlaceholder src={product.img} alt={product.name} />
-            <div className="p-4 flex flex-col gap-2">
-              <h3 className="font-semibold text-lg">{product.name}</h3>
-
-              <div className="flex items-center justify-between">
-                <p className="text-gray-500 text-sm">
-                  Making charges: 18% + 3% GST.
-                </p>
-
-                {/* Right side certification badges */}
-                <div className="flex items-center gap-2">
-                  <div
-                    className="flex items-center gap-1 text-xs font-medium bg-green-100 text-green-700 px-2 py-1 rounded-full"
-                    title="BIS Hallmarked 916 Gold"
-                  >
-                    <BadgeCheck size={14} className="text-green-600" />
-                    916
-                  </div>
-                  <div
-                    className="flex items-center gap-1 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-1 rounded-full"
-                    title="HUID Certified Jewellery"
-                  >
-                    <Shield size={14} className="text-blue-600" />
-                    HUID
+            {/* Lazy-load image with Suspense fallback */}
+            <Suspense
+              fallback={
+                <div className="relative w-full h-80 sm:h-72 md:h-64 overflow-hidden rounded-lg bg-gray-200 animate-pulse">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse" />
                   </div>
                 </div>
-              </div>
+              }
+            >
+              <ImageWithPlaceholder src={product.img} alt={product.name} />
+            </Suspense>
+
+            <div className="p-4 flex flex-col gap-2">
+              {isLoading ? (
+                <>
+                  <Skeleton height="h-5" width="w-3/4" />
+                  <Skeleton height="h-4" width="w-2/3" />
+                  <div className="mt-2 space-y-2">
+                    <Skeleton height="h-4" width="w-1/2" />
+                    <Skeleton height="h-4" width="w-1/3" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3 className="font-semibold text-lg text-center maroon-color">
+                    {product.name}
+                  </h3>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    {/* <p className="text-gray-500 text-sm text-left">
+                      Making charges: 18% + 3% GST.
+                    </p> */}
+
+                    <div className="flex flex-col items-start gap-2">
+                      {/* <div
+                        className="flex items-center gap-1 text-xs text-center font-medium bg-green-100 text-green-700 px-2 py-1 rounded-full"
+                        title="BIS Hallmarked 916 Gold"
+                      >
+                        <BadgeCheck size={30} className="text-green-600" />
+                        916 Hallmark
+                      </div> */}
+
+                      {/* Optional HUID */}
+                      {/* <div
+                        className="flex items-center gap-1 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-1 rounded-full"
+                        title="HUID Certified Jewellery"
+                      >
+                        <Shield size={14} className="text-blue-600" />
+                        HUID
+                      </div> */}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         ))}
@@ -126,4 +145,4 @@ const BestSellers = () => {
   );
 };
 
-export default BestSellers;
+export default memo(BestSellers);

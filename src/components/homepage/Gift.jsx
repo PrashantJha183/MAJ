@@ -1,11 +1,18 @@
-import React, { useEffect, useState, useCallback, memo } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  lazy,
+  Suspense,
+} from "react";
 import { motion } from "framer-motion";
 import image from "../../assets/DSC_8896.JPG";
 import anniversary from "../../assets/Jewellery/DSC_9066.JPG";
 import wedding from "../../assets/Jewellery/DSC_9062.JPG";
 import engagement from "../../assets/Jewellery/DSC_9086.JPG";
-// Gift.jsx — Minimalistic & Optimized Gift Section with Responsive Animation + LQIP Blur-Up + Skeleton Loader
 
+// --- Data ---
 const IMAGES = [
   { id: "birthday", title: "Birthday", src: image, alt: "Birthday gift" },
   { id: "wedding", title: "Wedding", src: wedding, alt: "Wedding gift" },
@@ -23,7 +30,7 @@ const IMAGES = [
   },
 ];
 
-// --- Utility to preload images ---
+// --- Preload helper ---
 function preloadImage(src) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -55,68 +62,64 @@ const Card = memo(({ item, showTextAlways }) => {
   return (
     <motion.div
       className="group relative overflow-hidden rounded-md shadow-md bg-white-40 backdrop-blur-sm"
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 60,
+        damping: 14,
+        mass: 0.8,
+        duration: 0.8,
+      }}
       viewport={{ once: false, amount: 0.3 }}
-      whileHover={!showTextAlways ? { scale: 1.03 } : {}}
+      whileHover={!showTextAlways ? { scale: 1.02 } : {}}
     >
-      {/* LQIP placeholder (same image, highly blurred) */}
-      {!loaded && (
-        <img
-          src={item.src}
-          alt={item.alt}
-          className="absolute inset-0 w-full h-full object-cover blur-3xl scale-110 opacity-0"
-          draggable={false}
-        />
-      )}
-
-      {/* Skeleton shimmer loader overlay for image & text */}
+      {/* Skeleton shimmer loader */}
       {!loaded && (
         <div className="absolute inset-0 bg-gray-300/40 animate-pulse overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-5 rounded-md bg-gray-200/60 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.8s_linear_infinite]" />
         </div>
       )}
 
-      {/* Main Image (high resolution) */}
-      <img
+      {/* Soft blur placeholder */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 blur-3xl scale-110 transition-all duration-700 ease-out ${
+          loaded ? "opacity-0" : "opacity-100"
+        }`}
+      />
+
+      {/* Main Image — smoother fade & scale */}
+      <motion.img
         src={item.src}
         alt={item.alt}
         onLoad={handleImgLoad}
         loading="lazy"
-        width={1200}
-        height={800}
+        width={900}
+        height={600}
         draggable={false}
-        className={`w-full h-60 md:h-72 lg:h-80 object-cover transition-all duration-700 ease-out transform-gpu ${
-          loaded ? "opacity-100 blur-0 scale-100" : "opacity-0"
+        className={`w-full h-56 md:h-68 lg:h-72 object-cover transition-all duration-[1400ms] ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu ${
+          loaded
+            ? "opacity-100 scale-100 blur-0"
+            : "opacity-0 scale-[1.08] blur-sm"
         }`}
+        style={{ willChange: "opacity, transform" }}
       />
 
-      {/* Bottom overlay */}
+      {/* Text overlay */}
       <motion.div
-        transition={{ duration: 0.3 }}
-        className={`absolute bottom-0 md:bottom-2 left-0 w-full px-4 py-3 text-center text-white backdrop-blur-md transition-all duration-300 transform ${
+        transition={{ type: "spring", stiffness: 100, damping: 14 }}
+        className={`absolute bottom-0 md:bottom-2 left-0 w-full px-4 py-3 text-center text-white backdrop-blur-md transition-all duration-400 transform ${
           showTextAlways
             ? "opacity-100 translate-y-0 low-bg-laptop"
             : "opacity-0 translate-y-5 low-bg group-hover:opacity-100 group-hover:translate-y-0"
         }`}
       >
-        {loaded ? (
-          <h3 className="text-lg font-semibold tracking-wide drop-shadow-md">
-            {item.title}
-          </h3>
-        ) : (
-          // Text skeleton shimmer placeholder
-          <div className="mx-auto w-24 h-5 rounded-md bg-gray-200/60 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.5s_linear_infinite]" />
-          </div>
-        )}
+        <h3 className="text-lg font-semibold tracking-wide drop-shadow-md">
+          {item.title}
+        </h3>
       </motion.div>
 
-      {/* Shimmer animation keyframes */}
+      {/* Shine keyframes */}
       <style jsx>{`
         @keyframes shine {
           0% {
@@ -130,6 +133,9 @@ const Card = memo(({ item, showTextAlways }) => {
     </motion.div>
   );
 });
+
+// Lazy-load Card
+const LazyCard = lazy(() => Promise.resolve({ default: Card }));
 
 // --- Main Gift Section ---
 export default function Gift() {
@@ -152,7 +158,7 @@ export default function Gift() {
       <motion.header
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ type: "spring", stiffness: 80, damping: 14 }}
         viewport={{ once: true }}
         className="mb-10 text-center"
       >
@@ -169,9 +175,17 @@ export default function Gift() {
       </motion.header>
 
       <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center items-center max-w-6xl mx-auto">
-        {IMAGES.map((img) => (
-          <Card key={img.id} item={img} showTextAlways={isTouch} />
-        ))}
+        <Suspense
+          fallback={
+            <div className="col-span-4 text-center text-gray-500 py-10 animate-pulse">
+              Loading gifts...
+            </div>
+          }
+        >
+          {IMAGES.map((img) => (
+            <LazyCard key={img.id} item={img} showTextAlways={isTouch} />
+          ))}
+        </Suspense>
       </div>
     </section>
   );
