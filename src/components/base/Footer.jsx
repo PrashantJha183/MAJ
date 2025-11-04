@@ -1,6 +1,7 @@
 import React from "react";
 import { Facebook, Instagram } from "lucide-react";
-
+import Logo from "../../assets/MAJ Logo FIle.svg";
+import { Link } from "react-router-dom";
 const footerLinks = [
   { label: "About Us", href: "#about" },
   { label: "Collections", href: "#collections" },
@@ -39,10 +40,24 @@ const Footer = () => {
       <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between gap-10">
         {/* Brand & Description */}
         <div className="flex-1">
-          <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-3">
-            Mahadeo Sah Amarnath Jewellers
-          </h2>
-          <p className="text-gray-100 text-sm md:text-base leading-relaxed">
+          <Link to="/">
+            <div className="flex items-center gap-3 mb-3">
+              {/* Logo */}
+
+              <img
+                src={Logo}
+                alt="Mahadeo Sah Amarnath Jewellers Logo"
+                className="w-20 h-20 sm:w-28 sm:h-28 object-contain"
+              />
+              {/* Text (hidden on mobile) */}
+              <h2 className="text-xl md:text-3xl font-bold font-serif text-white">
+                Mahadeo Sah Amarnath Prasad Jewellers
+              </h2>
+            </div>
+          </Link>
+
+          {/* Description (hidden on mobile) */}
+          <p className="hidden sm:block text-gray-100 text-sm md:text-base leading-relaxed">
             Crafting timeless jewelry since 1911, celebrating heritage, trust,
             and exquisite craftsmanship for generations.
           </p>
@@ -69,8 +84,7 @@ const Footer = () => {
       {/* Footer Bottom */}
       <div className="relative mt-12 text-gray-100 text-sm md:text-base border-t border-gray-500 pt-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          {/* Mobile First Order */}
-          {/* Social Icons (top in mobile) */}
+          {/* Social Icons */}
           <div className="order-1 md:order-3 w-full md:w-1/3 flex justify-center md:justify-end gap-4">
             {socialLinks.map((social, idx) => {
               const Icon = social.icon;
@@ -89,7 +103,7 @@ const Footer = () => {
             })}
           </div>
 
-          {/* Copyright (middle in mobile) */}
+          {/* Copyright */}
           <div className="order-2 md:order-1 w-full md:w-1/3 flex justify-center md:justify-start">
             <p>
               © {currentYear} Mahadeo Sah Amarnath Jewellers. All Rights
@@ -97,7 +111,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Designed & Developed (bottom in mobile) */}
+          {/* Designed & Developed */}
           <div className="order-3 md:order-2 w-full md:w-1/3 flex justify-center">
             <p>
               Designed & Developed by{" "}
