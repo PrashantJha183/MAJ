@@ -1,6 +1,8 @@
 import React, { useEffect, useState, memo } from "react";
 
-// Image preloader with safe cleanup
+// Global in-memory cache to remember loaded images
+const imageCache = new Set();
+
 const preloadImage = (src) =>
   new Promise((resolve) => {
     const img = new Image();
@@ -14,13 +16,25 @@ const preloadImage = (src) =>
   });
 
 const ImageWithPlaceholder = memo(({ src, alt }) => {
-  const [loaded, setLoaded] = useState(false);
+  // Initialize as loaded if already cached
+  const [loaded, setLoaded] = useState(imageCache.has(src));
 
   useEffect(() => {
     let active = true;
+
+    // Skip preloading if already cached
+    if (imageCache.has(src)) {
+      setLoaded(true);
+      return;
+    }
+
     preloadImage(src).then(() => {
-      if (active) setLoaded(true);
+      if (active) {
+        imageCache.add(src); // Cache image after load
+        setLoaded(true);
+      }
     });
+
     return () => {
       active = false;
     };
@@ -28,14 +42,14 @@ const ImageWithPlaceholder = memo(({ src, alt }) => {
 
   return (
     <div className="relative w-full h-80 sm:h-72 md:h-64 overflow-hidden rounded-t-lg bg-gray-200">
-      {/* Always-visible placeholder */}
+      {/* Placeholder — fades out once loaded */}
       <div
-        className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-out bg-gradient-to-br from-gray-300 to-gray-200 blur-2xl  ${
+        className={`absolute inset-0 w-full h-full transition-opacity duration-700 ease-out bg-gradient-to-br from-gray-300 to-gray-200 blur-2xl ${
           loaded ? "opacity-0" : "opacity-100"
         }`}
       />
 
-      {/* Real image fades in after load */}
+      {/* Real image — fades in only once per session */}
       <img
         src={src}
         alt={alt}

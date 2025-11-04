@@ -13,7 +13,7 @@ import mobile2 from "../../assets/MAJ Mobile Banner 2.jpg";
 import mobile3 from "../../assets/MAJ Mobile Banner 3.jpg";
 import mobile4 from "../../assets/MAJ Mobile Banner 4.jpg";
 
-const slidesDesktop = [hero1, hero2, hero3, hero4];
+const slidesDesktop = [hero3, hero4, hero1, hero2];
 const slidesMobile = [mobile1, mobile2, mobile3, mobile4];
 
 export default function Hero() {
@@ -81,14 +81,16 @@ export default function Hero() {
     </div>
   );
 
-  // Show placeholder fixed height before images load (prevents layout shift)
+  // Show placeholder fixed height before images load
   if (!loaded) {
     return (
       <div className="p-4 md:p-10 mt-0 md:mt-20 w-full">
-        <div className="hidden md:block">
+        {/* Desktop + Tablet */}
+        <div className="hidden sm:block">
           <SkeletonSlide height="500px" dots={slidesDesktop} />
         </div>
-        <div className="block md:hidden">
+        {/* Mobile */}
+        <div className="block sm:hidden">
           <SkeletonSlide height="300px" dots={slidesMobile} />
         </div>
       </div>
@@ -97,10 +99,19 @@ export default function Hero() {
 
   return (
     <div className="w-full relative p-4 md:p-10 mt-0 md:mt-20" {...handlers}>
-      {/* Desktop / Tablet */}
+      {/* Desktop + Tablet */}
       <div
-        className="hidden md:block w-full relative overflow-hidden rounded-lg"
-        style={{ height: "800px" }}
+        className={`hidden sm:block w-full relative overflow-hidden rounded-lg ${
+          window.innerWidth >= 640 && window.innerWidth <= 1024
+            ? "hero-image-height"
+            : ""
+        }`}
+        style={{
+          height:
+            window.innerWidth >= 640 && window.innerWidth <= 1024
+              ? undefined
+              : "70vh",
+        }}
       >
         <div className="absolute inset-0">
           <AnimatePresence initial={false} mode="wait">
@@ -120,7 +131,7 @@ export default function Hero() {
         {/* Navigation Arrows */}
         <button
           onClick={handlePrev}
-          className="absolute top-1/2 -translate-y-1/2 left-4 bg-yellow-600 text-white rounded-full p-2 shadow-lg hover:bg-yellow-700 transition"
+          className="absolute top-1/2 -translate-y-1/2 left-4 bg-transparent text-white rounded-full p-2 shadow-lg  transition"
           aria-label="Previous Slide"
         >
           <ChevronLeft size={50} />
@@ -128,13 +139,13 @@ export default function Hero() {
 
         <button
           onClick={handleNext}
-          className="absolute top-1/2 -translate-y-1/2 right-4 bg-yellow-600 text-white rounded-full p-2 shadow-lg hover:bg-yellow-700 transition"
+          className="absolute top-1/2 -translate-y-1/2 right-4 bg-transparent text-white rounded-full p-2 shadow-lg  transition"
           aria-label="Next Slide"
         >
           <ChevronRight size={50} />
         </button>
 
-        {/* Dots (centered within image area, not container) */}
+        {/* Dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-6 z-10">
           {slidesDesktop.map((_, index) => (
             <div
@@ -149,7 +160,7 @@ export default function Hero() {
 
       {/* Mobile */}
       <div
-        className="block md:hidden w-full relative overflow-hidden rounded-lg"
+        className="block sm:hidden w-full relative overflow-hidden rounded-lg"
         style={{ height: "300px" }}
       >
         <div className="absolute inset-0">
@@ -167,7 +178,6 @@ export default function Hero() {
           </AnimatePresence>
         </div>
 
-        {/* Dots (centered in image) */}
         <div className="absolute bottom-3 left-40 -translate-x-1/3 flex space-x-3 z-10">
           {slidesMobile.map((_, index) => (
             <div

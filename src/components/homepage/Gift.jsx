@@ -55,15 +55,17 @@ function useIsTouchDevice() {
 }
 
 // --- Card Component ---
-const Card = memo(({ item, showTextAlways }) => {
+const Card = memo(({ item, showTextAlways, playOnce }) => {
   const [loaded, setLoaded] = useState(false);
   const handleImgLoad = useCallback(() => setLoaded(true), []);
 
   return (
     <motion.div
       className="group relative overflow-hidden rounded-md shadow-md bg-white-40 backdrop-blur-sm"
+      // Animation setup
       initial={{ opacity: 0, y: 40, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      animate={playOnce ? { opacity: 1, y: 0, scale: 1 } : {}}
+      whileInView={!playOnce ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{
         type: "spring",
         stiffness: 60,
@@ -71,7 +73,7 @@ const Card = memo(({ item, showTextAlways }) => {
         mass: 0.8,
         duration: 0.8,
       }}
-      viewport={{ once: false, amount: 0.3 }}
+      viewport={{ once: playOnce, amount: 0.3 }} // Only play once if requested
       whileHover={!showTextAlways ? { scale: 1.02 } : {}}
     >
       {/* Skeleton shimmer loader */}
@@ -88,7 +90,7 @@ const Card = memo(({ item, showTextAlways }) => {
         }`}
       />
 
-      {/* Main Image — smoother fade & scale */}
+      {/* Main Image */}
       <motion.img
         src={item.src}
         alt={item.alt}
@@ -141,6 +143,7 @@ const LazyCard = lazy(() => Promise.resolve({ default: Card }));
 export default function Gift() {
   const isTouch = useIsTouchDevice();
   const [loadedMap, setLoadedMap] = useState({});
+  const [hasAnimated, setHasAnimated] = useState(false); // Track animation status
 
   useEffect(() => {
     (async () => {
@@ -151,15 +154,20 @@ export default function Gift() {
     })();
   }, []);
 
+  // Mark animation as played once (runs only on first render)
+  useEffect(() => {
+    if (!hasAnimated) setHasAnimated(true);
+  }, [hasAnimated]);
+
   const isLoaded = useCallback((src) => !!loadedMap[src], [loadedMap]);
 
   return (
     <section className="new-font mx-auto px-4 py-12">
+      {/* Header animation (only once) */}
       <motion.header
         initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 80, damping: 14 }}
-        viewport={{ once: true }}
         className="mb-10 text-center"
       >
         <p className="text-md font-medium maroon-color uppercase tracking-wide">
@@ -174,6 +182,7 @@ export default function Gift() {
         </p>
       </motion.header>
 
+      {/* Cards */}
       <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center items-center max-w-6xl mx-auto">
         <Suspense
           fallback={
@@ -183,7 +192,12 @@ export default function Gift() {
           }
         >
           {IMAGES.map((img) => (
-            <LazyCard key={img.id} item={img} showTextAlways={isTouch} />
+            <LazyCard
+              key={img.id}
+              item={img}
+              showTextAlways={isTouch}
+              playOnce={hasAnimated} // Pass down "play once" control
+            />
           ))}
         </Suspense>
       </div>

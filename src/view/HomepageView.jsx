@@ -1,35 +1,57 @@
-import Hero from "../components/homepage/Hero";
-// import Reel from "../components/homepage/Reel";
-import Gift from "../components/homepage/Gift";
+import React, { Suspense, lazy } from "react";
 import ErrorBoundary from "../components/base/ErrorBoundary";
-import Band from "../components/homepage/Band";
-import BestSellers from "../components/homepage/BestSellers";
-// import NewArrivals from "../components/homepage/NewArrivals";
+import SkeletonLoader from "../components/base/SkeletonLoader";
+
+// Lazy load homepage components
+const Hero = lazy(() => import("../components/homepage/Hero"));
+const Gift = lazy(() => import("../components/homepage/Gift"));
+const Band = lazy(() => import("../components/homepage/Band"));
+const BestSellers = lazy(() => import("../components/homepage/BestSellers"));
+// const Reel = lazy(() => import("../components/homepage/Reel"));
+// const NewArrivals = lazy(() => import("../components/homepage/NewArrivals"));
+
 const HomepageView = () => {
   return (
     <>
       <ErrorBoundary>
-        <Hero />
+        <Suspense fallback={<SkeletonLoader />}>
+          <Hero />
+        </Suspense>
       </ErrorBoundary>
 
-      {/* <ErrorBoundary>
-        <Reel />
-      </ErrorBoundary> */}
+      {/* 
       <ErrorBoundary>
-        <BestSellers />
+        <Suspense fallback={<SkeletonLoader />}>
+          <Reel />
+        </Suspense>
+      </ErrorBoundary> 
+      */}
+
+      <ErrorBoundary>
+        <Suspense fallback={<SkeletonLoader />}>
+          <BestSellers />
+        </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Gift />
+        <Suspense fallback={<SkeletonLoader />}>
+          <Gift />
+        </Suspense>
       </ErrorBoundary>
 
       <ErrorBoundary>
-        <Band />
+        <Suspense fallback={<SkeletonLoader />}>
+          <Band />
+        </Suspense>
       </ErrorBoundary>
 
-      {/* <ErrorBoundary>
-        <NewArrivals />
-      </ErrorBoundary> */}
+      {/* 
+      <ErrorBoundary>
+        <Suspense fallback={<SkeletonLoader />}>
+          <NewArrivals />
+        </Suspense>
+      </ErrorBoundary> 
+      */}
     </>
   );
 };

@@ -31,14 +31,24 @@ const Skeleton = ({
 );
 
 const BestSellers = () => {
-  const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.2 });
+  // Trigger animation only once (not every scroll)
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
   const [isLoading, setIsLoading] = useState(true);
+  const [hasAnimated, setHasAnimated] = useState(false); // ✅ tracks if animation already played
 
   useEffect(() => {
-    // simulate small loading phase for text (real world: data fetch)
+    // Simulate small loading phase for text (real-world: API fetch)
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    // Mark animation as played once the section first comes into view
+    if (inView && !hasAnimated) {
+      setHasAnimated(true);
+    }
+  }, [inView, hasAnimated]);
 
   // Container + Item animations
   const container = {
@@ -74,13 +84,14 @@ const BestSellers = () => {
         className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4"
         variants={container}
         initial="hidden"
-        animate={inView ? "show" : "hidden"}
+        // Animate only once after first visibility
+        animate={hasAnimated ? "show" : "hidden"}
       >
         {bestSellers.map((product) => (
           <motion.div
             key={product.id}
             variants={item}
-            className="flex flex-col shadow-lg rounded-lg overflow-hidden bg-white  transition-shadow duration-300"
+            className="flex flex-col shadow-lg rounded-lg overflow-hidden bg-white transition-shadow duration-300"
           >
             {/* Lazy-load image with Suspense fallback */}
             <Suspense
@@ -112,28 +123,26 @@ const BestSellers = () => {
                   </h3>
 
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    {/* <p className="text-gray-500 text-sm text-left">
-                      Making charges: 18% + 3% GST.
-                    </p> */}
-
+                    {/* Optional info section */}
+                    {/* 
                     <div className="flex flex-col items-start gap-2">
-                      {/* <div
+                      <div
                         className="flex items-center gap-1 text-xs text-center font-medium bg-green-100 text-green-700 px-2 py-1 rounded-full"
                         title="BIS Hallmarked 916 Gold"
                       >
                         <BadgeCheck size={30} className="text-green-600" />
                         916 Hallmark
-                      </div> */}
+                      </div>
 
-                      {/* Optional HUID */}
-                      {/* <div
+                      <div
                         className="flex items-center gap-1 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-1 rounded-full"
                         title="HUID Certified Jewellery"
                       >
                         <Shield size={14} className="text-blue-600" />
                         HUID
-                      </div> */}
-                    </div>
+                      </div>
+                    </div> 
+                    */}
                   </div>
                 </>
               )}
