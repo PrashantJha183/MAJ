@@ -1,10 +1,10 @@
 // components/base/Header.jsx
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, Home, Info, Phone } from "lucide-react";
+import { Home, Info, Phone } from "lucide-react";
 import Logo from "../../assets/MAJ_Logo_for_Web.png";
 import ring from "../../assets/DSC_9099.JPG";
-import maangtika from ".././../assets/DSC_8885.JPG";
+import maangtika from "../../assets/DSC_8885.JPG";
 import nathani from "../../assets/DSC_8925.JPG";
 import earrings from "../../assets/DSC_9084.JPG";
 import necklace from "../../assets/DSC_9118.JPG";
@@ -27,10 +27,8 @@ const categoriesSource = [
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3C/svg%3E";
 
-// Category item with shimmer
 const CategoryItem = React.memo(function CategoryItem({ item }) {
   const [loaded, setLoaded] = useState(false);
-
   return (
     <div className="flex flex-col items-center min-w-[70px]">
       <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-yellow-500 shadow-sm bg-gray-100 flex items-center justify-center m-2 transition-transform duration-300 hover:scale-105">
@@ -55,13 +53,20 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpenMobile, setSearchOpenMobile] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [menuReady, setMenuReady] = useState(false);
   const location = useLocation();
   const categories = useMemo(() => categoriesSource, []);
 
-  const toggleMenu = useCallback(() => setMenuOpen((s) => !s), []);
+  const toggleMenu = useCallback(() => {
+    setMenuOpen((prev) => !prev);
+  }, []);
+
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMenuReady(true), 10);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <>
@@ -102,6 +107,7 @@ const Header = () => {
 
           {/* RIGHT - Nav */}
           <div className="flex-1 flex justify-end items-center">
+            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-6 font-medium">
               <Link
                 to="/"
@@ -136,26 +142,27 @@ const Header = () => {
             </nav>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden ml-2">
+            <div className="md:hidden ml-2 z-[60]">
               <button
                 onClick={toggleMenu}
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 className="relative w-8 h-8 flex items-center justify-center focus:outline-none"
               >
+                {/* Animated Bars */}
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-200 ease-out ${
-                    menuOpen ? "rotate-45" : "-translate-y-2"
+                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-300 ease-in-out ${
+                    menuOpen ? "rotate-45 translate-y-0" : "-translate-y-2"
                   }`}
                 />
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-opacity duration-200 ease-out ${
+                  className={`block absolute w-6 h-0.5 bg-black transition-opacity duration-300 ease-in-out ${
                     menuOpen ? "opacity-0" : "opacity-100"
                   }`}
                 />
                 <span
-                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-200 ease-out ${
-                    menuOpen ? "-rotate-45" : "translate-y-2"
+                  className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-300 ease-in-out ${
+                    menuOpen ? "-rotate-45 translate-y-0" : "translate-y-2"
                   }`}
                 />
               </button>
@@ -175,54 +182,33 @@ const Header = () => {
         </div>
       </header>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU OVERLAY + SLIDE-IN */}
       <div
-        className={`fixed inset-0 z-50 md:hidden pointer-events-none`}
-        aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-40 md:hidden ${
+          menuReady ? "transition-all duration-300 ease-in-out" : ""
+        } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
       >
+        {/* Overlay */}
         <div
           onClick={closeMenu}
-          className={`absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-200 ease-out ${
-            menuOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
-          }`}
+          className={`absolute inset-0 bg-black ${
+            menuReady ? "transition-opacity duration-300 ease-in-out" : ""
+          } ${menuOpen ? "opacity-40" : "opacity-0"}`}
         />
+        {/* Slide-in Menu */}
         <aside
-          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform transition-transform duration-200 ease-out ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform ${
+            menuReady ? "transition-transform duration-300 ease-in-out" : ""
+          } ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <div className="p-4 flex items-center justify-end">
-            <button
-              onClick={closeMenu}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M18 6L6 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <nav className="p-4 space-y-4">
-            <div className="pt-2 flex flex-col gap-3">
+          <nav className="p-4 space-y-4 mt-10">
+            <div className="pt-6 flex flex-col gap-3">
               {categories.map((c) => (
                 <Link
                   key={c.name}
                   to={c.link}
                   onClick={closeMenu}
-                  className="flex items-center gap-4 px-3 py-2 rounded-md w-full text-md pointer-events-auto"
+                  className="flex items-center gap-4 px-3 py-3 rounded-md w-full text-md pointer-events-auto transition-all duration-300 hover:bg-gray-100"
                 >
                   <img
                     src={c.img}
@@ -240,7 +226,7 @@ const Header = () => {
       </div>
 
       {/* MOBILE BOTTOM NAV */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-inner md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t shadow-inner md:hidden">
         <div className="max-w-screen-xl mx-auto flex justify-around">
           <Link
             to="/"
