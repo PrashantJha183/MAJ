@@ -8,7 +8,7 @@ import Home from "./view/HomepageView";
 import About from "./view/AboutpageView";
 import Contact from "./view/ContactpageView";
 import Product from "./view/ProductpageView";
-
+import Rings from "./view/RingspageView";
 // --- Scroll to top on route change ---
 const ScrollToTop = ({ children }) => {
   const location = useLocation();
@@ -32,6 +32,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/products" element={<Product />} />
+            <Route path="/rings" element={<Rings />} />
           </Routes>
         </main>
 

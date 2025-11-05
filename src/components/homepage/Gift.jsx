@@ -7,10 +7,10 @@ import React, {
   Suspense,
 } from "react";
 import { motion } from "framer-motion";
-import image from "../../assets/DSC_8896.JPG";
-import anniversary from "../../assets/Jewellery/DSC_9066.JPG";
-import wedding from "../../assets/Jewellery/DSC_9062.JPG";
-import engagement from "../../assets/Jewellery/DSC_9086.JPG";
+import image from "/Jewellery/DSC_8896.JPG";
+import anniversary from "/Jewellery/DSC_9066.JPG";
+import wedding from "/Jewellery/DSC_9062.JPG";
+import engagement from "/Jewellery/DSC_9086.JPG";
 
 // --- Data ---
 const IMAGES = [

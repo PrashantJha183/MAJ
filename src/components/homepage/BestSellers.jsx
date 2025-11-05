@@ -7,10 +7,10 @@ import { BadgeCheck, Shield } from "lucide-react";
 const ImageWithPlaceholder = lazy(() => import("../base/ImageWithPlaceholder"));
 
 // Local assets
-import ring from "../../assets/Jewellery/DSC_9105.JPG";
-import necklace from "../../assets/Jewellery/DSC_9041.JPG";
-import earrings from "../../assets/Jewellery/DSC_8974.JPG";
-import mangalsutra from "../../assets/Jewellery/DSC_9010.JPG";
+import ring from "/Jewellery/DSC_9105.JPG";
+import necklace from "/Jewellery/DSC_9041.JPG";
+import earrings from "/Jewellery/DSC_8974.JPG";
+import mangalsutra from "/Jewellery/DSC_9010.JPG";
 
 const bestSellers = [
   { id: 1, name: "Ring", img: ring },

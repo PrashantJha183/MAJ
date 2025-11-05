@@ -3,15 +3,15 @@ import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Home, Info, Phone } from "lucide-react";
 import Logo from "../../assets/MAJ_Logo_for_Web.png";
-import ring from "../../assets/Jewellery/DSC_9099.JPG";
-import maangtika from ".././../assets/Jewellery/DSC_8885.JPG";
-import nathani from "../../assets/Jewellery/DSC_8925.JPG";
-import earrings from "../../assets/Jewellery/DSC_9084.JPG";
-import necklace from "../../assets/Jewellery/DSC_9118.JPG";
-import managlsutra from "../../assets/Jewellery/DSC_9030.JPG";
+import ring from "../../assets/DSC_9099.JPG";
+import maangtika from ".././../assets/DSC_8885.JPG";
+import nathani from "../../assets/DSC_8925.JPG";
+import earrings from "../../assets/DSC_9084.JPG";
+import necklace from "../../assets/DSC_9118.JPG";
+import managlsutra from "../../assets/DSC_9030.JPG";
 
 const categoriesSource = [
-  { name: "Rings", img: ring, alt: "Rings", link: "/products" },
+  { name: "Rings", img: ring, alt: "Rings", link: "/rings" },
   { name: "Necklaces", img: necklace, alt: "Necklaces", link: "/products" },
   { name: "Earrings", img: earrings, alt: "Earrings", link: "/products" },
   {
