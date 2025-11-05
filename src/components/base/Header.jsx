@@ -27,6 +27,7 @@ const categoriesSource = [
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3C/svg%3E";
 
+// --- Category Item with consistent cinematic blur ---
 const CategoryItem = React.memo(function CategoryItem({ item }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -38,7 +39,7 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
         <img
           src={item.img || FALLBACK_SRC}
           alt={item.alt || item.name}
-          className={`w-full h-full object-cover transition-all duration-500 ease-in-out ${
+          className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${
             loaded ? "blur-0 opacity-100" : "blur-2xl opacity-0"
           }`}
           loading="lazy"
@@ -51,22 +52,23 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
   );
 });
 
+// --- Header Component ---
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuReady, setMenuReady] = useState(false);
   const location = useLocation();
   const categories = useMemo(() => categoriesSource, []);
 
-  const toggleMenu = useCallback(() => {
-    setMenuOpen((prev) => !prev);
-  }, []);
-
+  const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   useEffect(() => {
     const t = setTimeout(() => setMenuReady(true), 10);
     return () => clearTimeout(t);
   }, []);
+
+  // --- Blur loading for Logo ---
+  const [logoLoaded, setLogoLoaded] = useState(false);
 
   return (
     <>
@@ -80,14 +82,29 @@ const Header = () => {
               aria-label="Go to homepage"
             >
               <div className="relative w-24 md:w-36 h-12 md:h-20 flex-shrink-0">
+                {/* Placeholder blurred logo */}
+                {!logoLoaded && (
+                  <img
+                    src={Logo}
+                    alt="Logo placeholder"
+                    className="absolute inset-0 w-full h-full object-contain filter blur-2xl opacity-30"
+                    aria-hidden="true"
+                  />
+                )}
+
+                {/* Actual logo */}
                 <img
                   src={Logo}
                   alt="Mahadeo Sah Amarnath Jewellers Logo"
-                  className="object-contain w-full h-full"
+                  className={`object-contain w-full h-full transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                    logoLoaded ? "blur-0 opacity-100" : "blur-2xl opacity-0"
+                  }`}
                   loading="eager"
+                  onLoad={() => setLogoLoaded(true)}
                   onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
                 />
               </div>
+
               <div
                 className="hidden md:flex flex-col"
                 style={{ fontFamily: "Domine" }}
@@ -149,7 +166,6 @@ const Header = () => {
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 className="relative w-8 h-8 flex items-center justify-center focus:outline-none"
               >
-                {/* Animated Bars */}
                 <span
                   className={`block absolute w-6 h-0.5 bg-black transform transition-transform duration-300 ease-in-out ${
                     menuOpen ? "rotate-45 translate-y-0" : "-translate-y-2"
@@ -188,14 +204,12 @@ const Header = () => {
           menuReady ? "transition-all duration-300 ease-in-out" : ""
         } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
       >
-        {/* Overlay */}
         <div
           onClick={closeMenu}
           className={`absolute inset-0 bg-black ${
             menuReady ? "transition-opacity duration-300 ease-in-out" : ""
           } ${menuOpen ? "opacity-40" : "opacity-0"}`}
         />
-        {/* Slide-in Menu */}
         <aside
           className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform ${
             menuReady ? "transition-transform duration-300 ease-in-out" : ""
@@ -210,13 +224,8 @@ const Header = () => {
                   onClick={closeMenu}
                   className="flex items-center gap-4 px-3 py-3 rounded-md w-full text-md pointer-events-auto transition-all duration-300 hover:bg-gray-100"
                 >
-                  <img
-                    src={c.img}
-                    alt={c.name}
-                    className="w-14 h-14 rounded-full object-cover transition-all duration-500 ease-in-out"
-                    loading="lazy"
-                    onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
-                  />
+                  {/* Apply same cinematic blur loading here */}
+                  <CinematicImage src={c.img} alt={c.name} />
                   <span className="flex-1 text-left">{c.name}</span>
                 </Link>
               ))}
@@ -268,6 +277,28 @@ const Header = () => {
 
       <div className="pt-0 md:pt-20 pb-0 md:pb-0" />
     </>
+  );
+};
+
+// Reusable blur-loading image for mobile menu
+const CinematicImage = ({ src, alt }) => {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
+      {!loaded && (
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]" />
+      )}
+      <img
+        src={src || FALLBACK_SRC}
+        alt={alt}
+        className={`w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+          loaded ? "blur-0 opacity-100" : "blur-2xl opacity-0"
+        }`}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
+      />
+    </div>
   );
 };
 

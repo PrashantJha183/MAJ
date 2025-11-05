@@ -19,6 +19,9 @@ dist-ssr/
 .env
 .env.*.local
 
+# JSON data files
+*.json
+
 # Editor directories and files
 .vscode/
 !.vscode/extensions.json
@@ -61,5 +64,5 @@ node_modules/.vite/
 # Test coverage
 coverage/
 
-# Misc
+# TypeScript build info
 *.tsbuildinfo
