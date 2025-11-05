@@ -1,9 +1,9 @@
+// components/pages/Jewellery/Rings.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Ring1 from "../../../assets/DSC_9085.JPG"; // fallback image
 
-// Dynamically import JSON based on env variable
 import ringsData from "./Rings.json";
 
 export default function Rings() {
@@ -51,8 +51,8 @@ export default function Rings() {
 
   return (
     <div className="px-6 pt-12 pb-8 md:pt-32 md:pb-20 bg-gray-50 new-font">
-      <h2 className="text-2xl md:text-4xl font-bold text-center mb-10">
-        Our Rings Collection
+      <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 maroon-color">
+        Rings
       </h2>
 
       <div
@@ -83,16 +83,8 @@ export default function Rings() {
               onMouseLeave={() => stopSlideshow(i)}
               onClick={() => handleCardClick(ring)}
             >
-              <div className="relative w-full h-64 md:h-72 lg:h-80 bg-gray-100 overflow-hidden">
-                {!isLoaded && !isFailed && (
-                  <img
-                    src={src}
-                    alt={`${ring.name} placeholder`}
-                    className="absolute inset-0 w-full h-full object-cover filter blur-2xl opacity-30"
-                    aria-hidden="true"
-                  />
-                )}
-
+              <div className="relative w-full h-64 md:h-72 lg:h-80 bg-gray-100 overflow-hidden rounded-md">
+                {/* Image */}
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={src}
@@ -108,13 +100,14 @@ export default function Rings() {
                       duration: 0.9,
                       ease: [0.83, 0, 0.17, 1],
                     }}
-                    className={`absolute inset-0 w-full h-full object-cover rounded-md transition-all duration-700 ease-in-out ${
-                      isLoaded
-                        ? "blur-0 scale-100 opacity-100"
-                        : "blur-2xl scale-105 opacity-0"
-                    }`}
+                    className="absolute inset-0 w-full h-full object-cover rounded-md transition-all duration-700 ease-in-out"
                   />
                 </AnimatePresence>
+
+                {/* Liquid glass / frosted overlay */}
+                {!isLoaded && (
+                  <div className="absolute inset-0 w-full h-full bg-white/30 backdrop-blur-xl animate-pulse rounded-md" />
+                )}
               </div>
 
               <div className="p-3 text-center">
