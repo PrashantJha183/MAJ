@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "name": "Elegant Gold Ring",
+    "description": "A timeless gold ring with intricate craftsmanship and premium finish, perfect for every occasion.",
+    "price": 15500,
+    "images": [
+      "/Jewellery/DSC_9085.JPG",
+      "/Jewellery/DSC_9086.JPG",
+      "/Jewellery/DSC_9089.JPG"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Classic Solitaire",
+    "description": "A graceful solitaire ring featuring a stunning central gemstone, symbolizing purity and elegance.",
+    "price": 16000,
+    "images": [
+      "/Jewellery/DSC_9090.JPG",
+      "/Jewellery/DSC_9092.JPG",
+      "/Jewellery/DSC_9093.JPG"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Floral Design Ring",
+    "description": "Inspired by nature, this floral design ring adds charm and sophistication to your style.",
+    "price": 16500,
+    "images": [
+      "/Jewellery/DSC_9094.JPG",
+      "/Jewellery/DSC_9095.JPG",
+      "/Jewellery/DSC_9086.JPG"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Royal Gem Ring",
+    "description": "Exuding royalty, this ring features a deep gemstone set in polished gold for a regal appeal.",
+    "price": 17000,
+    "images": [
+      "/Jewellery/DSC_9089.JPG",
+      "/Jewellery/DSC_9090.JPG",
+      "/Jewellery/DSC_9092.JPG"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Minimal Charm",
+    "description": "A sleek and minimal ring design, perfect for those who prefer understated luxury.",
+    "price": 17500,
+    "images": [
+      "/Jewellery/DSC_9093.JPG",
+      "/Jewellery/DSC_9094.JPG",
+      "/Jewellery/DSC_9095.JPG"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Vintage Gold Ring",
+    "description": "A classic piece with vintage patterns, blending traditional aesthetics with modern elegance.",
+    "price": 18000,
+    "images": [
+      "/Jewellery/DSC_9096.JPG",
+      "/Jewellery/DSC_9097.JPG",
+      "/Jewellery/DSC_9098.JPG"
+    ]
+  }
+]
