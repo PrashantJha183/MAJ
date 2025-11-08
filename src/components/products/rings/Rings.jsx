@@ -50,7 +50,7 @@ export default function Rings() {
   };
 
   return (
-    <div className="px-6 pt-12 pb-8 md:pt-32 md:pb-20 bg-gray-50 new-font">
+    <div className="px-6 pt-12 pb-8 md:pt-32 md:pb-20 new-font">
       <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 maroon-color">
         Rings
       </h2>

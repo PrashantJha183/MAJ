@@ -68,9 +68,9 @@ const RingDetails = memo(() => {
                     ? "blur-0 scale-100 opacity-100"
                     : "blur-md scale-105 opacity-70"
                 }`}
-                initial={{ opacity: 0, scale: 1.05 }}
+                initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
+                exit={{ opacity: 0, scale: 1 }}
                 transition={{
                   duration: 0.9,
                   ease: [0.83, 0, 0.17, 1], // cinematic cubic-bezier
