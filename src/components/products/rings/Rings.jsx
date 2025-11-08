@@ -11,23 +11,27 @@ export default function Rings() {
   const [failedImages, setFailedImages] = useState({});
   const [activeIndexes, setActiveIndexes] = useState({});
   const [isPortrait, setIsPortrait] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const intervalsRef = useRef({});
   const navigate = useNavigate();
 
-  // Detect orientation (portrait or landscape)
+  // ✅ Detect orientation and device type
   useEffect(() => {
-    const checkOrientation = () => {
-      const isPortraitNow = window.matchMedia(
-        "(orientation: portrait)"
-      ).matches;
+    const checkOrientationAndDevice = () => {
+      const isPortraitNow = window.matchMedia("(orientation: portrait)").matches;
       setIsPortrait(isPortraitNow);
+
+      const width = window.innerWidth;
+      setIsMobileOrTablet(width < 1024); // true for mobile & tablet (portrait or landscape)
     };
-    checkOrientation();
-    window.addEventListener("resize", checkOrientation);
-    window.addEventListener("orientationchange", checkOrientation);
+
+    checkOrientationAndDevice();
+    window.addEventListener("resize", checkOrientationAndDevice);
+    window.addEventListener("orientationchange", checkOrientationAndDevice);
+
     return () => {
-      window.removeEventListener("resize", checkOrientation);
-      window.removeEventListener("orientationchange", checkOrientation);
+      window.removeEventListener("resize", checkOrientationAndDevice);
+      window.removeEventListener("orientationchange", checkOrientationAndDevice);
       Object.values(intervalsRef.current).forEach(clearInterval);
     };
   }, []);
@@ -44,7 +48,9 @@ export default function Rings() {
     setFailedImages((prev) => ({ ...prev, [`${index}_${src}`]: true }));
   };
 
+  // ✅ Disable slideshow on mobile + tablet (portrait or landscape)
   const startSlideshow = (i, images) => {
+    if (isMobileOrTablet) return;
     clearInterval(intervalsRef.current[i]);
     if (!images || images.length < 2) return;
     intervalsRef.current[i] = setInterval(() => {
@@ -56,6 +62,7 @@ export default function Rings() {
   };
 
   const stopSlideshow = (i) => {
+    if (isMobileOrTablet) return;
     clearInterval(intervalsRef.current[i]);
     setActiveIndexes((prev) => ({ ...prev, [i]: 0 }));
   };
@@ -71,15 +78,11 @@ export default function Rings() {
       </h2>
 
       <div
-        className={`
-          grid gap-6 justify-center
-          ${
-            isPortrait
-              ? "grid-cols-2 sm:grid-cols-2"
-              : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
-          }
-          max-w-7xl mx-auto
-        `}
+        className={`grid gap-6 justify-center ${
+          isPortrait
+            ? "grid-cols-2 sm:grid-cols-2"
+            : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
+        } max-w-7xl mx-auto`}
       >
         {ringsData.map((ring, i) => {
           const images = ring.images?.length ? ring.images : [Ring1];
@@ -92,7 +95,9 @@ export default function Rings() {
           return (
             <motion.div
               key={ring.id}
-              className="bg-white rounded-md overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className={`bg-white rounded-md overflow-hidden shadow-md transition-all duration-300 cursor-pointer ${
+                !isMobileOrTablet ? "hover:shadow-xl" : ""
+              }`}
               initial={!animateOnce ? { opacity: 0, y: 30 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.04 }}
@@ -105,7 +110,6 @@ export default function Rings() {
                   isPortrait ? "h-60" : "h-screen md:h-72 lg:h-80"
                 } bg-gray-100 overflow-hidden rounded-md`}
               >
-                {/* Image */}
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={src}
@@ -114,18 +118,14 @@ export default function Rings() {
                     loading="lazy"
                     onLoad={() => handleImageLoad(i, src)}
                     onError={() => handleImageError(i, src)}
-                    initial={{ opacity: 0, scale: 1.05 }}
+                    initial={{ opacity: 0, scale: 1 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{
-                      duration: 0.9,
-                      ease: [0.83, 0, 0.17, 1],
-                    }}
+                    exit={{ opacity: 0, scale: 1 }}
+                    transition={{ duration: 0.9, ease: [0.83, 0, 0.17, 1] }}
                     className="absolute inset-0 w-full h-full object-cover rounded-md transition-all duration-700 ease-in-out"
                   />
                 </AnimatePresence>
 
-                {/* Liquid glass / frosted overlay */}
                 {!isLoaded && (
                   <div className="absolute inset-0 w-full h-full bg-white/30 backdrop-blur-xl animate-pulse rounded-md" />
                 )}
