@@ -1,5 +1,5 @@
 // components/base/Header.jsx
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Info, Phone } from "lucide-react";
 import Logo from "../../assets/MAJ_Logo_for_Web.png";
@@ -27,7 +27,7 @@ const categoriesSource = [
 const FALLBACK_SRC =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3C/svg%3E";
 
-// --- Category Item with consistent cinematic blur ---
+// --- Category Item ---
 const CategoryItem = React.memo(function CategoryItem({ item }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -52,22 +52,26 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
   );
 });
 
-// --- Header Component ---
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuReady, setMenuReady] = useState(false);
+  const [animating, setAnimating] = useState(false); // prevents double-click race
   const location = useLocation();
   const categories = useMemo(() => categoriesSource, []);
 
-  const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const toggleMenu = useCallback(() => {
+    if (animating) return; // block rapid clicks
+    setAnimating(true);
+    setMenuOpen((prev) => !prev);
+    setTimeout(() => setAnimating(false), 300); // matches transition duration
+  }, [animating]);
 
-  useEffect(() => {
-    const t = setTimeout(() => setMenuReady(true), 10);
-    return () => clearTimeout(t);
-  }, []);
+  const closeMenu = useCallback(() => {
+    if (animating) return;
+    setAnimating(true);
+    setMenuOpen(false);
+    setTimeout(() => setAnimating(false), 300);
+  }, [animating]);
 
-  // --- Blur loading for Logo ---
   const [logoLoaded, setLogoLoaded] = useState(false);
 
   return (
@@ -80,9 +84,9 @@ const Header = () => {
               to="/"
               className="inline-flex items-center"
               aria-label="Go to homepage"
+              onClick={closeMenu}
             >
               <div className="relative w-24 md:w-36 h-12 md:h-20 flex-shrink-0">
-                {/* Placeholder blurred logo */}
                 {!logoLoaded && (
                   <img
                     src={Logo}
@@ -91,8 +95,6 @@ const Header = () => {
                     aria-hidden="true"
                   />
                 )}
-
-                {/* Actual logo */}
                 <img
                   src={Logo}
                   alt="Mahadeo Sah Amarnath Jewellers Logo"
@@ -190,7 +192,7 @@ const Header = () => {
         <div className="hidden md:block border-t bg-gray-50">
           <div className="max-w-screen-xl mx-auto flex items-center justify-center gap-6 py-3 px-4 overflow-x-auto">
             {categories.map((c) => (
-              <Link key={c.name} to={c.link} className="pointer-events-auto">
+              <Link key={c.name} to={c.link}>
                 <CategoryItem item={c} />
               </Link>
             ))}
@@ -200,20 +202,20 @@ const Header = () => {
 
       {/* MOBILE MENU OVERLAY + SLIDE-IN */}
       <div
-        className={`fixed inset-0 z-40 md:hidden ${
-          menuReady ? "transition-all duration-300 ease-in-out" : ""
-        } ${menuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
       >
         <div
           onClick={closeMenu}
-          className={`absolute inset-0 bg-black ${
-            menuReady ? "transition-opacity duration-300 ease-in-out" : ""
-          } ${menuOpen ? "opacity-40" : "opacity-0"}`}
+          className={`absolute inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+            menuOpen ? "opacity-40" : "opacity-0"
+          }`}
         />
         <aside
-          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform ${
-            menuReady ? "transition-transform duration-300 ease-in-out" : ""
-          } ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute top-0 right-0 h-full w-11/12 max-w-xs bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+            menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         >
           <nav className="p-4 space-y-4 mt-10">
             <div className="pt-6 flex flex-col gap-3">
@@ -222,9 +224,8 @@ const Header = () => {
                   key={c.name}
                   to={c.link}
                   onClick={closeMenu}
-                  className="flex items-center gap-4 px-3 py-3 rounded-md w-full text-md pointer-events-auto transition-all duration-300 hover:bg-gray-100"
+                  className="flex items-center gap-4 px-3 py-3 rounded-md w-full text-md transition-all duration-300 hover:bg-gray-100"
                 >
-                  {/* Apply same cinematic blur loading here */}
                   <CinematicImage src={c.img} alt={c.name} />
                   <span className="flex-1 text-left">{c.name}</span>
                 </Link>
@@ -239,6 +240,7 @@ const Header = () => {
         <div className="max-w-screen-xl mx-auto flex justify-around">
           <Link
             to="/"
+            onClick={closeMenu}
             className={`flex flex-col items-center justify-center flex-1 py-2 transition-all ${
               location.pathname === "/"
                 ? "maroon-background text-white"
@@ -251,6 +253,7 @@ const Header = () => {
 
           <Link
             to="/contact"
+            onClick={closeMenu}
             className={`flex flex-col items-center justify-center flex-1 py-2 transition-all ${
               location.pathname === "/contact"
                 ? "maroon-background text-white"
@@ -263,6 +266,7 @@ const Header = () => {
 
           <Link
             to="/about"
+            onClick={closeMenu}
             className={`flex flex-col items-center justify-center flex-1 py-2 transition-all ${
               location.pathname === "/about"
                 ? "maroon-background text-white"
@@ -280,7 +284,7 @@ const Header = () => {
   );
 };
 
-// Reusable blur-loading image for mobile menu
+// Reusable blur-loading image
 const CinematicImage = ({ src, alt }) => {
   const [loaded, setLoaded] = useState(false);
   return (

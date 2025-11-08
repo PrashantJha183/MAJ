@@ -95,7 +95,7 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-@media (min-width: 320px) and (max-width: 768px) {
+@media (min-width: 320px) and (max-width: 767px) {
   .screen-height {
     height: 80vh;
   }
@@ -112,10 +112,13 @@
   .play-icon {
     font-size: 2rem;
   }
+  .hero-image-height {
+    height: 300px;
+  }
 }
 
-@media (min-width: 640px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .hero-image-height {
-    height: clamp(400px, 70vh, 800px);
+    height: 500px;
   }
 }

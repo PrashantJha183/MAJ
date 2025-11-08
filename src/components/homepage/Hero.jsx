@@ -19,7 +19,26 @@ const slidesMobile = [mobile1, mobile2, mobile3, mobile4];
 export default function Hero() {
   const [current, setCurrent] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(false);
   const totalSlides = slidesDesktop.length;
+
+  // Detect orientation
+  useEffect(() => {
+    const checkOrientation = () => {
+      if (window.matchMedia("(orientation: landscape)").matches) {
+        setIsLandscape(true);
+      } else {
+        setIsLandscape(false);
+      }
+    };
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
+    return () => {
+      window.removeEventListener("resize", checkOrientation);
+      window.removeEventListener("orientationchange", checkOrientation);
+    };
+  }, []);
 
   // Preload all images
   useEffect(() => {
@@ -91,86 +110,100 @@ export default function Hero() {
     );
   }
 
+  const isMobileView = window.innerWidth < 640;
+  const isTabletView = window.innerWidth >= 640 && window.innerWidth < 1024;
+  const showDesktop =
+    !isMobileView && (window.innerWidth >= 1024 || isLandscape);
+
+  // Set dynamic height based on device type
+  const getSlideHeight = () => {
+    if (isMobileView) return "300px";
+    if (isTabletView) return "600px";
+    return "70vh";
+  };
+
   return (
     <div className="w-full relative p-4 md:p-10 mt-0 md:mt-20" {...handlers}>
-      {/* Desktop + Tablet */}
-      <div
-        className="hidden sm:block relative w-full overflow-hidden rounded-lg"
-        style={{ height: "70vh" }}
-      >
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={slidesDesktop[current]}
-            src={slidesDesktop[current]}
-            alt={`Hero Banner Desktop ${current + 1}`}
-            className="w-full h-full object-cover rounded-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
-        </AnimatePresence>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={handlePrev}
-          className="absolute top-1/2 -translate-y-1/2 left-4 bg-transparent text-white rounded-full p-2 shadow-lg transition"
-          aria-label="Previous Slide"
+      {/* Desktop + Tablet Landscape */}
+      {showDesktop ? (
+        <div
+          className="relative w-full overflow-hidden rounded-lg"
+          style={{ height: getSlideHeight() }}
         >
-          <ChevronLeft size={50} />
-        </button>
+          <AnimatePresence initial={false} mode="wait">
+            <motion.img
+              key={slidesDesktop[current]}
+              src={slidesDesktop[current]}
+              alt={`Hero Banner Desktop ${current + 1}`}
+              className="w-full h-full object-cover rounded-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+            />
+          </AnimatePresence>
 
-        <button
-          onClick={handleNext}
-          className="absolute top-1/2 -translate-y-1/2 right-4 bg-transparent text-white rounded-full p-2 shadow-lg transition"
-          aria-label="Next Slide"
+          {/* Navigation Arrows */}
+          <button
+            onClick={handlePrev}
+            className="absolute top-1/2 -translate-y-1/2 left-4 bg-transparent text-white rounded-full p-2 shadow-lg transition"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft size={50} />
+          </button>
+
+          <button
+            onClick={handleNext}
+            className="absolute top-1/2 -translate-y-1/2 right-4 bg-transparent text-white rounded-full p-2 shadow-lg transition"
+            aria-label="Next Slide"
+          >
+            <ChevronRight size={50} />
+          </button>
+
+          {/* Dots */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
+            {slidesDesktop.map((_, index) => (
+              <div
+                key={index}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  index === current ? "bg-yellow-600" : "bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        // Mobile + Tablet Portrait
+        <div
+          className="relative w-full overflow-hidden rounded-lg hero-image-height"
+          style={{ height: getSlideHeight() }}
         >
-          <ChevronRight size={50} />
-        </button>
-
-        {/* Dots centered relative to image */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-10">
-          {slidesDesktop.map((_, index) => (
-            <div
-              key={index}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === current ? "bg-yellow-600" : "bg-gray-300"
-              }`}
+          <AnimatePresence initial={false} mode="wait">
+            <motion.img
+              key={slidesMobile[current]}
+              src={slidesMobile[current]}
+              alt={`Hero Banner Mobile ${current + 1}`}
+              className="w-full h-full object-cover rounded-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
             />
-          ))}
-        </div>
-      </div>
+          </AnimatePresence>
 
-      {/* Mobile */}
-      <div
-        className="block sm:hidden relative w-full overflow-hidden rounded-lg"
-        style={{ height: "300px" }}
-      >
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={slidesMobile[current]}
-            src={slidesMobile[current]}
-            alt={`Hero Banner Mobile ${current + 1}`}
-            className="w-full h-full object-cover rounded-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-          />
-        </AnimatePresence>
-
-        {/* Dots centered relative to image */}
-        <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
-          {slidesMobile.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === current ? "bg-yellow-600" : "bg-gray-300"
-              }`}
-            />
-          ))}
+          {/* Dots */}
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
+            {slidesMobile.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === current ? "bg-yellow-600" : "bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Shimmer effect */}
       <style>{`

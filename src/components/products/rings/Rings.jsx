@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Ring1 from "../../../assets/DSC_9085.JPG"; // fallback image
-
 import ringsData from "./Rings.json";
 
 export default function Rings() {
@@ -11,14 +10,30 @@ export default function Rings() {
   const [animateOnce, setAnimateOnce] = useState(false);
   const [failedImages, setFailedImages] = useState({});
   const [activeIndexes, setActiveIndexes] = useState({});
+  const [isPortrait, setIsPortrait] = useState(false);
   const intervalsRef = useRef({});
   const navigate = useNavigate();
 
+  // Detect orientation (portrait or landscape)
   useEffect(() => {
-    setAnimateOnce(true);
+    const checkOrientation = () => {
+      const isPortraitNow = window.matchMedia(
+        "(orientation: portrait)"
+      ).matches;
+      setIsPortrait(isPortraitNow);
+    };
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("orientationchange", checkOrientation);
     return () => {
+      window.removeEventListener("resize", checkOrientation);
+      window.removeEventListener("orientationchange", checkOrientation);
       Object.values(intervalsRef.current).forEach(clearInterval);
     };
+  }, []);
+
+  useEffect(() => {
+    setAnimateOnce(true);
   }, []);
 
   const handleImageLoad = (index, src) => {
@@ -56,13 +71,15 @@ export default function Rings() {
       </h2>
 
       <div
-        className="
+        className={`
           grid gap-6 justify-center
-          grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4
-          [@media(orientation:portrait)]:grid-cols-2 
-          [@media(orientation:landscape)]:grid-cols-3
+          ${
+            isPortrait
+              ? "grid-cols-2 sm:grid-cols-2"
+              : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
+          }
           max-w-7xl mx-auto
-        "
+        `}
       >
         {ringsData.map((ring, i) => {
           const images = ring.images?.length ? ring.images : [Ring1];
@@ -83,7 +100,11 @@ export default function Rings() {
               onMouseLeave={() => stopSlideshow(i)}
               onClick={() => handleCardClick(ring)}
             >
-              <div className="relative w-full h-64 md:h-72 lg:h-80 bg-gray-100 overflow-hidden rounded-md">
+              <div
+                className={`relative w-full ${
+                  isPortrait ? "h-60" : "h-screen md:h-72 lg:h-80"
+                } bg-gray-100 overflow-hidden rounded-md`}
+              >
                 {/* Image */}
                 <AnimatePresence mode="wait">
                   <motion.img
