@@ -2,25 +2,29 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import hero1 from "../../assets/MAJ_Desktop.jpg";
 import hero2 from "../../assets/MAJ Desktop 2.jpg";
-import hero3 from "../../assets/MAJ Desktop 3.jpg";
 import hero4 from "../../assets/MAJ Desktop 4.jpg";
 
 import mobile1 from "../../assets/MAJ_Mobile_Banner.jpg";
 import mobile2 from "../../assets/MAJ Mobile Banner 2.jpg";
-import mobile3 from "../../assets/MAJ Mobile Banner 3.jpg";
 import mobile4 from "../../assets/MAJ Mobile Banner 4.jpg";
 
-const slidesDesktop = [hero3, hero4, hero1, hero2];
-const slidesMobile = [mobile1, mobile2, mobile3, mobile4];
+const slidesDesktop = [hero4, hero1, hero2];
+const slidesMobile = [mobile1, mobile2, mobile4];
+
+// Add link arrays (one link per slide). Edit paths as needed.
+const slidesDesktopLinks = ["/products", "/rings", "/products"];
+const slidesMobileLinks = ["/products", "/rings", "/products"];
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [isLandscape, setIsLandscape] = useState(false);
   const totalSlides = slidesDesktop.length;
+  const navigate = useNavigate();
 
   // Detect orientation
   useEffect(() => {
@@ -135,11 +139,12 @@ export default function Hero() {
               key={slidesDesktop[current]}
               src={slidesDesktop[current]}
               alt={`Hero Banner Desktop ${current + 1}`}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-lg cursor-pointer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
+              onClick={() => navigate(slidesDesktopLinks[current])}
             />
           </AnimatePresence>
 
@@ -183,11 +188,12 @@ export default function Hero() {
               key={slidesMobile[current]}
               src={slidesMobile[current]}
               alt={`Hero Banner Mobile ${current + 1}`}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-lg cursor-pointer"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
+              onClick={() => navigate(slidesMobileLinks[current])}
             />
           </AnimatePresence>
 

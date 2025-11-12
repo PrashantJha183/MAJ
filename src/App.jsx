@@ -12,6 +12,9 @@ import About from "./view/AboutpageView";
 import Contact from "./view/ContactpageView";
 import Product from "./view/ProductpageView";
 import Rings from "./view/RingspageView";
+import AdminLogin from "./view/AdminLoginpageView";
+import AdminDashboard from "./view/AdminDashboardpageView";
+import AdminGoldHistory from "./view/AdminGoldHistorypageView";
 
 // --- Lazy load for RingDetails (code splitting) ---
 const RingDetails = lazy(() =>
@@ -42,6 +45,9 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/products" element={<Product />} />
             <Route path="/rings" element={<Rings />} />
+            <Route path="/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/gold-history" element={<AdminGoldHistory />} />
 
             {/* RingDetails — Lazy Loaded + ErrorBoundary + Skeleton */}
             <Route

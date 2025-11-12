@@ -12,12 +12,22 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Optional: Prevent mobile tap highlight and long-press menu */
+/* Prevent mobile tap highlight and long-press menu */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
 }
 
+/* Remove arrows from number inputs globally */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
 .new-font {
   font-family: "Libre Baskerville";
 }
@@ -95,6 +105,52 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
+.bg-white-50 {
+  background-color: rgba(255, 255, 255, 0.5); /* white with 50% opacity */
+}
+
+/* Fix background height on mobile  */
+.responsive-min-height {
+  min-height: 100vh;
+}
+
+.border-maroon {
+  border: 1px solid #8b0000;
+}
+
+/* === Modal Overlay Styling === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4); /* same as bg-black/40 */
+  backdrop-filter: blur(6px); /* same as backdrop-blur-sm */
+  -webkit-backdrop-filter: blur(6px); /* Safari support */
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+.bg-black-40 {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.25s ease-out;
+}
+.admin-height {
+  height: 60vh;
+}
 @media (min-width: 320px) and (max-width: 767px) {
   .screen-height {
     height: 80vh;
@@ -114,6 +170,14 @@
   }
   .hero-image-height {
     height: 300px;
+  }
+
+  .responsive-min-height {
+    min-height: 60vh;
+  }
+
+  .admin-height {
+    height: 70vh;
   }
 }
 

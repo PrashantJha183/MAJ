@@ -5,6 +5,66 @@ import { useNavigate } from "react-router-dom";
 import Ring1 from "../../../assets/DSC_9085.JPG"; // fallback image
 import ringsData from "./Rings.json";
 
+const BlurOverlayImage = React.memo(
+  ({ src, alt, isFailed, onLoad, onError }) => {
+    const [loaded, setLoaded] = useState(false);
+    const [showLqip, setShowLqip] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setShowLqip(true), 100);
+      return () => clearTimeout(timer);
+    }, []);
+
+    return (
+      <div className="relative w-full h-full overflow-hidden rounded-md bg-gray-100">
+        {/* shimmer placeholder */}
+        {!loaded && (
+          <div className="absolute inset-0 rounded-md bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-[shimmer_1.5s_infinite]" />
+        )}
+
+        {/* blurred low-quality preview */}
+        {showLqip && !loaded && !isFailed && (
+          <img
+            src={src}
+            alt={`${alt} - LQIP`}
+            className="absolute w-full h-full object-cover filter blur-2xl scale-110 opacity-70 transition-all duration-500"
+          />
+        )}
+
+        {/* main image */}
+        <img
+          src={isFailed ? Ring1 : src}
+          alt={alt}
+          loading="lazy"
+          onLoad={() => {
+            setLoaded(true);
+            onLoad?.();
+          }}
+          onError={() => {
+            setLoaded(true);
+            onError?.();
+          }}
+          className={`relative w-full h-full object-cover transition-all duration-700 ${
+            loaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-105"
+          } rounded-md`}
+        />
+
+        {/* blue frosted overlay */}
+        {!loaded && (
+          <div className="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-2xl rounded-md z-10" />
+        )}
+
+        <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
+      </div>
+    );
+  }
+);
+
 export default function Rings() {
   const [loadedImages, setLoadedImages] = useState({});
   const [animateOnce, setAnimateOnce] = useState(false);
@@ -15,14 +75,15 @@ export default function Rings() {
   const intervalsRef = useRef({});
   const navigate = useNavigate();
 
-  // ✅ Detect orientation and device type
   useEffect(() => {
     const checkOrientationAndDevice = () => {
-      const isPortraitNow = window.matchMedia("(orientation: portrait)").matches;
+      const isPortraitNow = window.matchMedia(
+        "(orientation: portrait)"
+      ).matches;
       setIsPortrait(isPortraitNow);
 
       const width = window.innerWidth;
-      setIsMobileOrTablet(width < 1024); // true for mobile & tablet (portrait or landscape)
+      setIsMobileOrTablet(width < 1024);
     };
 
     checkOrientationAndDevice();
@@ -31,7 +92,10 @@ export default function Rings() {
 
     return () => {
       window.removeEventListener("resize", checkOrientationAndDevice);
-      window.removeEventListener("orientationchange", checkOrientationAndDevice);
+      window.removeEventListener(
+        "orientationchange",
+        checkOrientationAndDevice
+      );
       Object.values(intervalsRef.current).forEach(clearInterval);
     };
   }, []);
@@ -48,7 +112,6 @@ export default function Rings() {
     setFailedImages((prev) => ({ ...prev, [`${index}_${src}`]: true }));
   };
 
-  // ✅ Disable slideshow on mobile + tablet (portrait or landscape)
   const startSlideshow = (i, images) => {
     if (isMobileOrTablet) return;
     clearInterval(intervalsRef.current[i]);
@@ -89,7 +152,6 @@ export default function Rings() {
           const activeIndex = activeIndexes[i] ?? 0;
           const src = images[activeIndex];
           const key = `${i}_${src}`;
-          const isLoaded = loadedImages[key];
           const isFailed = failedImages[key];
 
           return (
@@ -108,27 +170,17 @@ export default function Rings() {
               <div
                 className={`relative w-full ${
                   isPortrait ? "h-60" : "h-screen md:h-72 lg:h-80"
-                } bg-gray-100 overflow-hidden rounded-md`}
+                } overflow-hidden`}
               >
                 <AnimatePresence mode="wait">
-                  <motion.img
-                    key={src}
-                    src={isFailed ? Ring1 : src}
+                  <BlurOverlayImage
+                    src={src}
                     alt={ring.name || "Jewellery Item"}
-                    loading="lazy"
+                    isFailed={isFailed}
                     onLoad={() => handleImageLoad(i, src)}
                     onError={() => handleImageError(i, src)}
-                    initial={{ opacity: 0, scale: 1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1 }}
-                    transition={{ duration: 0.9, ease: [0.83, 0, 0.17, 1] }}
-                    className="absolute inset-0 w-full h-full object-cover rounded-md transition-all duration-700 ease-in-out"
                   />
                 </AnimatePresence>
-
-                {!isLoaded && (
-                  <div className="absolute inset-0 w-full h-full bg-white/30 backdrop-blur-xl animate-pulse rounded-md" />
-                )}
               </div>
 
               <div className="p-3 text-center">

@@ -16,12 +16,12 @@ const stats = [
 ];
 
 // Board Members data
-const boardMembers = [
-  { name: "John Doe", role: "Founder & CEO", photo: member1 },
-  { name: "Jane Smith", role: "Head Designer", photo: member2 },
-  { name: "Robert Johnson", role: "Operations Head", photo: member3 },
-  { name: "Emily Davis", role: "Marketing Lead", photo: member4 },
-];
+// const boardMembers = [
+//   { name: "John Doe", role: "Founder & CEO", photo: member1 },
+//   { name: "Jane Smith", role: "Head Designer", photo: member2 },
+//   { name: "Robert Johnson", role: "Operations Head", photo: member3 },
+//   { name: "Emily Davis", role: "Marketing Lead", photo: member4 },
+// ];
 
 // StatItem Component
 const StatItem = memo(({ stat, inView, delay }) => {
@@ -145,7 +145,7 @@ const About = memo(() => {
         </div>
 
         {/* Board of Members */}
-        <motion.div
+        {/* <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           variants={fadeUp}
@@ -160,7 +160,7 @@ const About = memo(() => {
               <BoardMember key={i} member={member} delay={0.2 * i} />
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Message Section */}
         <motion.div

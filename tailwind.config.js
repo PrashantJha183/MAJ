@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}", // All React components
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        maroon: "#8b0000",
+      },
+    },
   },
   plugins: [],
 };
