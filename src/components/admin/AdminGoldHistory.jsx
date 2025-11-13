@@ -87,7 +87,7 @@ export default function AdminGoldHistory() {
                   </td>
 
                   {/* Mobile: Date + Time stacked */}
-                  <td className="px-4 py-3 text-sm text-gray-600 flex flex-col sm:hidden gap-2">
+                  <td className="px-4 py-3 text-sm text-gray-600 flex flex-col md:hidden gap-1">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="w-4 h-4" />
                       {formatDate(item.date)}
@@ -98,7 +98,7 @@ export default function AdminGoldHistory() {
                     </span>
                   </td>
 
-                  {/* Tablet/Desktop: Separate columns */}
+                  {/* Desktop: Separate columns */}
                   <td className="hidden md:table-cell px-4 py-3 text-sm text-gray-600">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="w-4 h-4" />

@@ -15,9 +15,10 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const [bgLoaded, setBgLoaded] = useState(false);
+  // Minimal throttle setup
   const lastAttempt = useRef(0);
-  const attemptDelay = 2500;
+  const THROTTLE_DELAY = 500; // 0.5 second minimal throttle
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -28,7 +29,9 @@ export default function AdminLogin() {
     async (e) => {
       e.preventDefault();
       const now = Date.now();
-      if (now - lastAttempt.current < attemptDelay) {
+
+      // Minimal throttle: prevent rapid repeated clicks
+      if (now - lastAttempt.current < THROTTLE_DELAY) {
         setError("Please wait a moment before trying again.");
         return;
       }
@@ -61,7 +64,7 @@ export default function AdminLogin() {
         setSuccess("Login successful! Redirecting...");
         setTimeout(() => {
           window.location.href = "/admin/dashboard";
-        }, 1500);
+        }, 1000);
       } catch (err) {
         setError(err.message || "Something went wrong. Try again.");
       } finally {
@@ -73,23 +76,27 @@ export default function AdminLogin() {
 
   return (
     <div className="relative flex items-center justify-center lg:justify-end new-font overflow-hidden responsive-min-height">
-      <div
-        className="hidden lg:block absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${AdminBg})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-      ></div>
+      {/* Background Image */}
+      <div className="hidden lg:block absolute inset-0 bg-cover bg-center">
+        <img
+          src={AdminBg}
+          alt="Admin Background"
+          className={`w-full h-full object-cover transition-all duration-700 ease-out ${
+            bgLoaded ? "blur-0 opacity-100" : "blur-2xl opacity-30"
+          }`}
+          onLoad={() => setBgLoaded(true)}
+        />
+      </div>
 
+      {/* Login Form */}
       <motion.div
         initial={{ opacity: 0, x: 60 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{
           type: "spring",
-          stiffness: 80,
-          damping: 15,
-          duration: 0.8,
+          stiffness: 300, // higher stiffness → faster
+          damping: 20, // lower damping → more bounce
+          duration: 0.5, // shorter duration
         }}
         className="relative z-10 w-[90%] sm:w-3/4 md:w-1/3 lg:w-[30%] xl:w-[25%] md:mt-24 bg-white border border-gray-200 shadow-lg rounded-2xl p-8 sm:p-10 md:p-16 lg:p-20 lg:mr-32"
       >
@@ -123,6 +130,7 @@ export default function AdminLogin() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+          {/* Username */}
           <div className="relative group">
             <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 maroon-color" />
             <input
@@ -138,6 +146,7 @@ export default function AdminLogin() {
             />
           </div>
 
+          {/* Password */}
           <div className="relative group">
             <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400 maroon-color" />
             <input
@@ -164,6 +173,7 @@ export default function AdminLogin() {
             </button>
           </div>
 
+          {/* Submit Button */}
           <motion.button
             type="submit"
             disabled={loading}
@@ -171,12 +181,15 @@ export default function AdminLogin() {
             transition={{ type: "spring", stiffness: 200, damping: 12 }}
             className={`w-full flex items-center justify-center gap-2 py-3 rounded-3xl text-white font-medium text-sm transition-all ${
               loading
-                ? "bg-[#8b0000]/70 cursor-not-allowed"
+                ? "maroon-background cursor-not-allowed"
                 : "maroon-background"
             }`}
           >
             {loading ? (
-              <div className=" w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+              <>
+                <div className="w-5 h-5 border-2  rounded-full animate-spin"></div>
+                Logging in...
+              </>
             ) : (
               <>
                 <LogIn className="w-5 h-5" />
