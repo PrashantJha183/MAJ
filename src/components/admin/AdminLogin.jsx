@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { User, Lock, LogIn, Eye, EyeOff } from "lucide-react";
-import AdminBg from "../../assets/admin.png";
-import Logo from "../../assets/MAJ_Logo_for_Web.png";
+import AdminBg from "../../assets/compressed/admin.png";
+import Logo from "../../assets/compressed/MAJ_Logo_for_Web.png";
 
 const BACKEND_URL = `${import.meta.env.VITE_BACKEND_URL}/api/admin/login`;
 

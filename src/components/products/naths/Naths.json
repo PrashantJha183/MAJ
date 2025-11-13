@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "name": "G Nathiya",
+    "netWeight": 5.87,
+    "images": [
+      "/Jewellery/compressed/DSC_8924.JPG",
+      "/Jewellery/compressed/DSC_8925.JPG",
+      "/Jewellery/compressed/DSC_8926.JPG",
+      "/Jewellery/compressed/DSC_8927.JPG",
+      "/Jewellery/compressed/DSC_8928.JPG",
+      "/Jewellery/compressed/DSC_8929.JPG",
+      "/Jewellery/compressed/DSC_8930.JPG",
+      "/Jewellery/compressed/DSC_8931.JPG",
+      "/Jewellery/compressed/DSC_8932.JPG"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "G Nathiya",
+    "netWeight": 10.3,
+    "images": [
+      "/Jewellery/compressed/DSC_8935.JPG",
+      "/Jewellery/compressed/DSC_8936.JPG",
+      "/Jewellery/compressed/DSC_8937.JPG",
+      "/Jewellery/compressed/DSC_8938.JPG"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "G Nathiya",
+    "netWeight": 9.04,
+    "images": [
+      "/Jewellery/compressed/DSC_8941.JPG",
+      "/Jewellery/compressed/DSC_8942.JPG",
+      "/Jewellery/compressed/DSC_8943.JPG",
+      "/Jewellery/compressed/DSC_8946.JPG",
+      "/Jewellery/compressed/DSC_8947.JPG",
+      "/Jewellery/compressed/DSC_8948.JPG"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "G Nathiya",
+    "netWeight": 5.02,
+    "images": [
+      "/Jewellery/compressed/DSC_8949.JPG",
+      "/Jewellery/compressed/DSC_8952.JPG",
+      "/Jewellery/compressed/DSC_8953.JPG",
+      "/Jewellery/compressed/DSC_8954.JPG",
+      "/Jewellery/compressed/DSC_8955.JPG",
+      "/Jewellery/compressed/DSC_8956.JPG",
+      "/Jewellery/compressed/DSC_8957.JPG",
+      "/Jewellery/compressed/DSC_8958.JPG",
+      "/Jewellery/compressed/DSC_8959.JPG"
+    ]
+  }
+]

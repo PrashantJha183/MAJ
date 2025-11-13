@@ -55,11 +55,11 @@ const BlurOverlayImage = React.memo(
         )}
 
         <style>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
+          @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+        `}</style>
       </div>
     );
   }
@@ -72,16 +72,27 @@ export default function Rings() {
   const [activeIndexes, setActiveIndexes] = useState({});
   const [isPortrait, setIsPortrait] = useState(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+  const [goldPricePerGram, setGoldPricePerGram] = useState(null);
   const intervalsRef = useRef({});
   const navigate = useNavigate();
 
+  // Fetch gold price per gram
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gold/latest-per-gram`)
+      .then((res) => res.json())
+      .then((data) => setGoldPricePerGram(data.pricePerGram))
+      .catch((err) =>
+        console.error("Failed to fetch gold price per gram", err)
+      );
+  }, []);
+
+  // Device/orientation check
   useEffect(() => {
     const checkOrientationAndDevice = () => {
       const isPortraitNow = window.matchMedia(
         "(orientation: portrait)"
       ).matches;
       setIsPortrait(isPortraitNow);
-
       const width = window.innerWidth;
       setIsMobileOrTablet(width < 1024);
     };
@@ -154,10 +165,15 @@ export default function Rings() {
           const key = `${i}_${src}`;
           const isFailed = failedImages[key];
 
+          const calculatedPrice =
+            goldPricePerGram && ring.netWeight
+              ? Math.round(ring.netWeight * goldPricePerGram * 1.18 * 1.03)
+              : null;
+
           return (
             <motion.div
               key={ring.id}
-              className={`bg-white rounded-md overflow-hidden shadow-md transition-all duration-300 cursor-pointer ${
+              className={`bg-white rounded-md overflow-hidden shadow-md transition-all duration-500 cursor-pointer relative group ${
                 !isMobileOrTablet ? "hover:shadow-xl" : ""
               }`}
               initial={!animateOnce ? { opacity: 0, y: 30 } : false}
@@ -167,10 +183,12 @@ export default function Rings() {
               onMouseLeave={() => stopSlideshow(i)}
               onClick={() => handleCardClick(ring)}
             >
-              <div
+              <motion.div
                 className={`relative w-full ${
                   isPortrait ? "h-60" : "h-screen md:h-72 lg:h-80"
                 } overflow-hidden`}
+                whileHover={!isMobileOrTablet ? {} : {}}
+                transition={{ duration: 0.5 }}
               >
                 <AnimatePresence mode="wait">
                   <BlurOverlayImage
@@ -181,12 +199,16 @@ export default function Rings() {
                     onError={() => handleImageError(i, src)}
                   />
                 </AnimatePresence>
-              </div>
+              </motion.div>
 
               <div className="p-3 text-center">
                 <p className="text-sm font-medium text-gray-700">{ring.name}</p>
                 <p className="text-lg font-semibold text-yellow-600 mt-1">
-                  ₹{ring.price.toLocaleString()}
+                  {calculatedPrice !== null ? (
+                    `₹${calculatedPrice.toLocaleString()}`
+                  ) : (
+                    <span className="inline-block w-16 h-6 bg-gray-300 rounded animate-pulse" />
+                  )}
                 </p>
               </div>
             </motion.div>

@@ -4,13 +4,13 @@ import { useSwipeable } from "react-swipeable";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import hero1 from "../../assets/MAJ_Desktop.jpg";
-import hero2 from "../../assets/MAJ Desktop 2.jpg";
-import hero4 from "../../assets/MAJ Desktop 4.jpg";
+import hero1 from "../../assets/compressed/MAJ_Desktop.jpg";
+import hero2 from "../../assets/compressed/MAJ Desktop 2.jpg";
+import hero4 from "../../assets/compressed/MAJ Desktop 4.jpg";
 
-import mobile1 from "../../assets/MAJ_Mobile_Banner.jpg";
-import mobile2 from "../../assets/MAJ Mobile Banner 2.jpg";
-import mobile4 from "../../assets/MAJ Mobile Banner 4.jpg";
+import mobile1 from "../../assets/compressed/MAJ_Mobile_Banner.jpg";
+import mobile2 from "../../assets/compressed/MAJ Mobile Banner 2.jpg";
+import mobile4 from "../../assets/compressed/MAJ Mobile Banner 4.jpg";
 
 const slidesDesktop = [hero4, hero1, hero2];
 const slidesMobile = [mobile1, mobile2, mobile4];

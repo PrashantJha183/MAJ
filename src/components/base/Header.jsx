@@ -2,17 +2,17 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Info, Phone } from "lucide-react";
-import Logo from "../../assets/MAJ_Logo_for_Web.png";
-import ring from "../../assets/DSC_9099.JPG";
-import maangtika from "../../assets/DSC_8885.JPG";
-import nathani from "../../assets/DSC_8925.JPG";
-import earrings from "../../assets/DSC_9084.JPG";
-import necklace from "../../assets/DSC_9118.JPG";
-import managlsutra from "../../assets/DSC_9030.JPG";
+import Logo from "../../assets/compressed/MAJ_Logo_for_Web.png";
+import ring from "../../assets/compressed/DSC_9099.JPG";
+import maangtika from "../../assets/compressed/DSC_8885.JPG";
+import nathani from "../../assets/compressed/DSC_8925.JPG";
+import earrings from "../../assets/compressed/DSC_9084.JPG";
+import necklace from "../../assets/compressed/DSC_9118.JPG";
+import managlsutra from "../../assets/compressed/DSC_9030.JPG";
 
 const categoriesSource = [
   { name: "Rings", img: ring, alt: "Rings", link: "/rings" },
-  { name: "Necklaces", img: necklace, alt: "Necklaces", link: "/products" },
+  { name: "Necklaces", img: necklace, alt: "Necklaces", link: "/necklaces" },
   { name: "Earrings", img: earrings, alt: "Earrings", link: "/products" },
   {
     name: "Mangalsutra",
@@ -20,8 +20,8 @@ const categoriesSource = [
     alt: "Mangalsutra",
     link: "/products",
   },
-  { name: "Maangtika", img: maangtika, alt: "Maangtika", link: "/products" },
-  { name: "Nath", img: nathani, alt: "Nathani", link: "/products" },
+  { name: "Maangtika", img: maangtika, alt: "Maangtika", link: "/maangtikas" },
+  { name: "Nath", img: nathani, alt: "Nathani", link: "/naths" },
 ];
 
 const FALLBACK_SRC =

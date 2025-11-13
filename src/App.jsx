@@ -12,6 +12,9 @@ import About from "./view/AboutpageView";
 import Contact from "./view/ContactpageView";
 import Product from "./view/ProductpageView";
 import Rings from "./view/RingspageView";
+import NecklacepageView from "./view/NecklacepageView";
+import MaangtikapageView from "./view/MaangtikapageView";
+import NathpageView from "./view/NathpageView";
 import AdminLogin from "./view/AdminLoginpageView";
 import AdminDashboard from "./view/AdminDashboardpageView";
 import AdminGoldHistory from "./view/AdminGoldHistorypageView";
@@ -19,6 +22,18 @@ import AdminGoldHistory from "./view/AdminGoldHistorypageView";
 // --- Lazy load for RingDetails (code splitting) ---
 const RingDetails = lazy(() =>
   import("./components/products/rings/RingDetails")
+);
+
+const NecklaceDetails = lazy(() =>
+  import("./components/products/necklaces/NecklaceDetails")
+);
+
+const MaangtikaDetails = lazy(() =>
+  import("./components/products/mangtikas/MaangtikaDetails")
+);
+
+const NathDetails = lazy(() =>
+  import("./components/products/naths/NathDetails")
 );
 
 // --- Scroll to top on route change ---
@@ -45,6 +60,9 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/products" element={<Product />} />
             <Route path="/rings" element={<Rings />} />
+            <Route path="/necklaces" element={<NecklacepageView />} />
+            <Route path="/maangtikas" element={<MaangtikapageView />} />
+            <Route path="/naths" element={<NathpageView />} />
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/gold-history" element={<AdminGoldHistory />} />
@@ -56,6 +74,39 @@ function App() {
                 <ErrorBoundary>
                   <Suspense fallback={<SkeletonLoader />}>
                     <RingDetails />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+
+            <Route
+              path="/necklaces/:id"
+              element={
+                <ErrorBoundary>
+                  <Suspense fallback={<SkeletonLoader />}>
+                    <NecklaceDetails />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+
+            <Route
+              path="/maangtikas/:id"
+              element={
+                <ErrorBoundary>
+                  <Suspense fallback={<SkeletonLoader />}>
+                    <MaangtikaDetails />
+                  </Suspense>
+                </ErrorBoundary>
+              }
+            />
+
+            <Route
+              path="/naths/:id"
+              element={
+                <ErrorBoundary>
+                  <Suspense fallback={<SkeletonLoader />}>
+                    <NathDetails />
                   </Suspense>
                 </ErrorBoundary>
               }

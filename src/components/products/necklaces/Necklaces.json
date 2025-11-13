@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "name": "CHA0020",
+    "netWeight": 22.44,
+    "images": [
+      "/Jewellery/compressed/DSC_9112.JPG",
+      "/Jewellery/compressed/DSC_9113.JPG",
+      "/Jewellery/compressed/DSC_9114.JPG"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "CHA0012",
+    "netWeight": 20.33,
+    "images": [
+      "/Jewellery/compressed/DSC_9118.JPG",
+      "/Jewellery/compressed/DSC_9119.JPG",
+      "/Jewellery/compressed/DSC_9120.JPG"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "CHA0534",
+    "netWeight": 15.45,
+    "images": ["/Jewellery/compressed/DSC_9122.JPG"]
+  },
+  {
+    "id": 4,
+    "name": "CHA0121",
+    "netWeight": 12.38,
+    "images": ["/Jewellery/compressed/DSC_9125.JPG"]
+  },
+  {
+    "id": 5,
+    "name": "CHA0278",
+    "netWeight": 20.87,
+    "images": [
+      "/Jewellery/compressed/DSC_9126.JPG",
+      "/Jewellery/compressed/DSC_9127.JPG"
+    ]
+  }
+]

@@ -10,14 +10,26 @@ const RingDetails = memo(() => {
   const ring = state?.ring;
   const [currentImage, setCurrentImage] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
+  const [goldPricePerGram, setGoldPricePerGram] = useState(null);
 
-  // Redirect if no data
   if (!ring) {
     navigate("/rings");
     return null;
   }
 
-  // Preload images and set as loaded once fetched
+  // Fetch latest gold price per gram
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gold/latest-per-gram`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGoldPricePerGram(data.pricePerGram);
+      })
+      .catch((err) =>
+        console.error("Failed to fetch gold price per gram", err)
+      );
+  }, []);
+
+  // Preload images
   useEffect(() => {
     ring.images.forEach((src) => {
       const img = new Image();
@@ -30,7 +42,7 @@ const RingDetails = memo(() => {
     });
   }, [ring.images]);
 
-  // Navigation handlers
+  // Image navigation
   const nextImage = useCallback(() => {
     setCurrentImage((prev) => (prev + 1) % ring.images.length);
   }, [ring.images.length]);
@@ -39,8 +51,16 @@ const RingDetails = memo(() => {
     setCurrentImage((prev) => (prev === 0 ? ring.images.length - 1 : prev - 1));
   }, [ring.images.length]);
 
+  // Pricing calculation
+  const goldCost =
+    goldPricePerGram && ring.netWeight ? ring.netWeight * goldPricePerGram : 0;
+  const makingCharges = goldCost * 0.18; // 18%
+  const subtotal = goldCost + makingCharges;
+  const gst = subtotal * 0.03; // 3% GST
+  const finalPrice = subtotal + gst;
+
   return (
-    <div className="min-h-screen  px-6 pt-12 pb-8 md:pt-32 md:pb-20 new-font">
+    <div className="min-h-screen px-6 pt-12 pb-8 md:pt-32 md:pb-20 new-font">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
         {/* Back Button */}
         <div className="p-4 border-b flex items-center justify-between">
@@ -48,12 +68,10 @@ const RingDetails = memo(() => {
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-gray-600 hover:text-yellow-600 transition"
           >
-            <ArrowLeft size={20} />
-            Back to Rings
+            <ArrowLeft size={20} /> Back to Rings
           </button>
         </div>
 
-        {/* Content */}
         <div className="grid md:grid-cols-2 gap-8 p-6 md:p-10">
           {/* Image Gallery */}
           <div className="relative w-full h-96 rounded-lg overflow-hidden shadow-md bg-gray-100 select-none">
@@ -71,10 +89,7 @@ const RingDetails = memo(() => {
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1 }}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.83, 0, 0.17, 1], // cinematic cubic-bezier
-                }}
+                transition={{ duration: 0.9, ease: [0.83, 0, 0.17, 1] }}
               />
             </AnimatePresence>
 
@@ -96,7 +111,7 @@ const RingDetails = memo(() => {
               </button>
             </div>
 
-            {/* Mobile Swipe Gesture */}
+            {/* Mobile Swipe */}
             <motion.div
               className="absolute inset-0 md:hidden"
               drag="x"
@@ -136,14 +151,33 @@ const RingDetails = memo(() => {
             >
               {ring.name}
             </motion.h1>
+
+            {/* Net Weight */}
             <motion.p
-              className="text-lg text-yellow-600 font-semibold mt-3"
+              className="text-sm text-gray-500 mt-1"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.6 }}
+            >
+              Net Weight: {ring.netWeight ? `${ring.netWeight} grams` : "N/A"}
+            </motion.p>
+
+            {/* Pricing Breakdown */}
+            <motion.div
+              className="mt-4 text-gray-700 space-y-1"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              ₹{ring.price.toLocaleString()}
-            </motion.p>
+              <p>Gold Price = ₹{goldCost.toLocaleString()}</p>
+              <p>Making Charges = ₹{makingCharges.toLocaleString()}</p>
+              <p>Subtotal = ₹{subtotal.toLocaleString()}</p>
+              <p>GST = ₹{gst.toLocaleString()}</p>
+              <p className="font-semibold text-yellow-600 text-lg mt-2">
+                Final Price = ₹{finalPrice.toLocaleString()}
+              </p>
+            </motion.div>
+
             <motion.p
               className="mt-6 text-gray-600 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}

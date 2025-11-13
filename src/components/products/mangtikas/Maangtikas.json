@@ -1,0 +1,75 @@
+[
+  {
+    "id": 1,
+    "name": "G Tika",
+    "netWeight": 11.11,
+    "images": [
+      "/Jewellery/compressed/DSC_8883.JPG",
+      "/Jewellery/compressed/DSC_8884.JPG",
+      "/Jewellery/compressed/DSC_8885.JPG",
+      "/Jewellery/compressed/DSC_8887.JPG",
+      "/Jewellery/compressed/DSC_8889.JPG"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "G Tika",
+    "netWeight": 8.97,
+    "images": [
+      "/Jewellery/compressed/DSC_8890.JPG",
+      "/Jewellery/compressed/DSC_8891.JPG",
+      "/Jewellery/compressed/DSC_8892.JPG",
+      "/Jewellery/compressed/DSC_8893.JPG"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "G TIka",
+    "netWeight": 7.74,
+    "images": [
+      "/Jewellery/compressed/DSC_8894.JPG",
+      "/Jewellery/compressed/DSC_8895.JPG",
+      "/Jewellery/compressed/DSC_8896.JPG",
+      "/Jewellery/compressed/DSC_8898.JPG"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "G Tika",
+    "netWeight": 6.39,
+    "images": [
+      "/Jewellery/compressed/DSC_8899.JPG",
+      "/Jewellery/compressed/DSC_8900.JPG",
+      "/Jewellery/compressed/DSC_8901.JPG",
+      "/Jewellery/compressed/DSC_8902.JPG",
+      "/Jewellery/compressed/DSC_8903.JPG",
+      "/Jewellery/compressed/DSC_8904.JPG"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "G Tika",
+    "netWeight": 6.7,
+    "images": [
+      "/Jewellery/compressed/DSC_8905.JPG",
+      "/Jewellery/compressed/DSC_8907.JPG",
+      "/Jewellery/compressed/DSC_8908.JPG",
+      "/Jewellery/compressed/DSC_8909.JPG"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "G Tika",
+    "netWeight": 7.97,
+    "images": [
+      "/Jewellery/compressed/DSC_8911.JPG",
+      "/Jewellery/compressed/DSC_8912.JPG",
+      "/Jewellery/compressed/DSC_8913.JPG",
+      "/Jewellery/compressed/DSC_8914.JPG",
+      "/Jewellery/compressed/DSC_8915.JPG",
+      "/Jewellery/compressed/DSC_8916.JPG",
+      "/Jewellery/compressed/DSC_8917.JPG",
+      "/Jewellery/compressed/DSC_8918.JPG"
+    ]
+  }
+]
