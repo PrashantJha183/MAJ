@@ -13,7 +13,7 @@ import hero6 from "../../assets/MAJ Desktop 6.jpg";
 import mobile1 from "../../assets/compressed/MAJ_Mobile_Banner.jpg";
 // import mobile2 from "../../assets/compressed/MAJ Mobile Banner 2.jpg";
 import mobile4 from "../../assets/compressed/MAJ Mobile Banner 4.jpg";
-import mobile5 from "../../assets/MAJ Mobile banner 5.jpg";
+import mobile5 from "../../assets/MAJ Mobile Banner 5.jpg";
 import mobile6 from "../../assets/MAJ Mobile Banner 6.jpg";
 
 const slidesDesktop = [hero4, hero1, hero5, hero6];
