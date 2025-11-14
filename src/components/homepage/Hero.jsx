@@ -16,7 +16,7 @@ import mobile4 from "../../assets/compressed/MAJ Mobile Banner 4.jpg";
 import mobile5 from "../../assets/MAJ Mobile Banner 5.jpg";
 import mobile6 from "../../assets/MAJ Mobile Banner 6.jpg";
 
-const slidesDesktop = [hero4, hero1, hero5, hero6];
+const slidesDesktop = [hero1, hero4, hero5, hero6];
 const slidesMobile = [mobile1, mobile4, mobile5, mobile6];
 
 // Add link arrays (one link per slide). Edit paths as needed.

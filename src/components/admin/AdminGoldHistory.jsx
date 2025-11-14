@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { History, CalendarDays, Clock, ArrowLeft } from "lucide-react";
+import { History, CalendarDays, Clock, ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -8,6 +8,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function AdminGoldHistory() {
   const [goldData, setGoldData] = useState([]);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("adminToken");
 
@@ -28,6 +29,17 @@ export default function AdminGoldHistory() {
     fetchGoldData();
   }, []);
 
+  // Search filter (date or price)
+  const filteredData = goldData.filter((item) => {
+    const date = item.date.split("T")[0];
+    const time = item.date.split("T")[1]?.split(".")[0];
+    const price = String(item.priceInINR);
+
+    return (
+      date.includes(search) || time.includes(search) || price.includes(search)
+    );
+  });
+
   const formatDate = (dateStr) => dateStr.split("T")[0];
   const formatTime = (dateStr) => dateStr.split("T")[1]?.split(".")[0];
 
@@ -35,22 +47,60 @@ export default function AdminGoldHistory() {
     <div className="p-4 md:p-10 mt-4 md:mt-20 bg-gray-50 min-h-screen new-font">
       <Toaster position="top-right" />
 
-      {/* Header */}
-      <div className="flex flex-row flex-wrap justify-between items-center mb-6 md:mb-8 gap-3 sm:gap-4">
-        <h1 className="text-lg sm:text-xl md:text-3xl font-semibold maroon-color flex items-center gap-2">
-          <History className="w-5 h-5 sm:w-6 sm:h-6 text-maroon" />
-          Gold Price History
-        </h1>
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8">
+        {/* Title + Mobile Back Button (side by side on mobile) */}
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <h1 className="text-lg sm:text-xl md:text-3xl font-semibold maroon-color flex items-center gap-2">
+            <History className="w-5 h-5 sm:w-6 sm:h-6 text-maroon" />
+            Gold Price History
+          </h1>
 
-        <button
-          onClick={() => navigate("/admin/dashboard")}
-          className="maroon-background text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:opacity-90 flex items-center justify-center gap-1 sm:gap-2 text-sm sm:text-base"
-        >
-          <ArrowLeft className="w-4 h-4 sm:hidden" />
-          <span className="hidden sm:inline-flex items-center gap-1 sm:gap-2">
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" /> Back to Dashboard
-          </span>
-        </button>
+          {/* Mobile Back Button (icon only) */}
+          <button
+            onClick={() => navigate("/admin/dashboard")}
+            className="md:hidden maroon-background text-white px-3 py-2 rounded-lg hover:opacity-90 flex items-center justify-center"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Desktop Search + Back (side by side) */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Search bar */}
+          <div className="flex items-center bg-white px-3 py-2 rounded-lg shadow-md border border-gray-200 w-72">
+            <Search className="w-4 h-4 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search by price or date..."
+              className="ml-2 w-full outline-none text-gray-700"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          {/* Desktop Back Button */}
+          <button
+            onClick={() => navigate("/admin/dashboard")}
+            className="maroon-background text-white px-4 py-2 rounded-lg hover:opacity-90 flex items-center gap-2 text-base"
+          >
+            <ArrowLeft className="w-5 h-5" /> Back to Dashboard
+          </button>
+        </div>
+
+        {/* Mobile Search (below title) */}
+        <div className="md:hidden w-full">
+          <div className="flex items-center bg-white px-3 py-2 rounded-lg shadow-md border border-gray-200 w-full mt-2">
+            <Search className="w-4 h-4 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search price or date..."
+              className="ml-2 w-full outline-none text-gray-700"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Table */}
@@ -66,14 +116,14 @@ export default function AdminGoldHistory() {
             </tr>
           </thead>
           <tbody>
-            {goldData.length === 0 ? (
+            {filteredData.length === 0 ? (
               <tr>
                 <td colSpan="5" className="text-center py-6 text-gray-500">
-                  No gold price history available.
+                  No matching results.
                 </td>
               </tr>
             ) : (
-              goldData.map((item, i) => (
+              filteredData.map((item, i) => (
                 <motion.tr
                   key={item._id}
                   initial={{ opacity: 0, y: 10 }}
@@ -82,11 +132,12 @@ export default function AdminGoldHistory() {
                   className="border-b hover:bg-gray-50"
                 >
                   <td className="px-4 py-3">{i + 1}</td>
+
                   <td className="px-4 py-3 font-medium text-maroon">
                     ₹{item.priceInINR}
                   </td>
 
-                  {/* Mobile: Date + Time stacked */}
+                  {/* Mobile: Date + Time */}
                   <td className="px-4 py-3 text-sm text-gray-600 flex flex-col md:hidden gap-1">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="w-4 h-4" />
@@ -98,7 +149,7 @@ export default function AdminGoldHistory() {
                     </span>
                   </td>
 
-                  {/* Desktop: Separate columns */}
+                  {/* Desktop */}
                   <td className="hidden md:table-cell px-4 py-3 text-sm text-gray-600">
                     <span className="flex items-center gap-1">
                       <CalendarDays className="w-4 h-4" />

@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Block admin pages from indexing
+Disallow: /admin/
+Disallow: /admin
+Disallow: /login
+
+# Allow JS, CSS, assets (important for SPA/React SEO)
+Allow: /*.js$
+Allow: /*.css$
+Allow: /assets/
+
+# Sitemap location
+Sitemap: https://majonline.in/sitemap.xml
