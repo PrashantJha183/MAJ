@@ -1,9 +1,9 @@
-// components/pages/Jewellery/Necklace.jsx
+// components/pages/Jewellery/Earrings.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Necklace1 from "../../../assets/DSC_9085.JPG"; // fallback
-import necklacesData from "./Necklaces.json";
+import Earring1 from "../../../assets/DSC_9085.JPG"; // fallback image
+import earringsData from "./Earrings.json";
 
 const BlurOverlayImage = React.memo(
   ({ src, alt, isFailed, onLoad, onError }) => {
@@ -17,23 +17,23 @@ const BlurOverlayImage = React.memo(
 
     return (
       <div className="relative w-full h-full overflow-hidden rounded-md bg-gray-100">
-        {/* shimmer */}
+        {/* shimmer placeholder */}
         {!loaded && (
           <div className="absolute inset-0 rounded-md bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-[shimmer_1.5s_infinite]" />
         )}
 
-        {/* blurred preview */}
+        {/* blurred low-quality preview */}
         {showLqip && !loaded && !isFailed && (
           <img
             src={src}
             alt={`${alt} - LQIP`}
-            className="absolute w-full h-full object-cover blur-2xl scale-110 opacity-70 transition-all duration-500"
+            className="absolute w-full h-full object-cover filter blur-2xl scale-110 opacity-70 transition-all duration-500"
           />
         )}
 
         {/* main image */}
         <img
-          src={isFailed ? Necklace1 : src}
+          src={isFailed ? Earring1 : src}
           alt={alt}
           loading="lazy"
           onLoad={() => {
@@ -45,27 +45,27 @@ const BlurOverlayImage = React.memo(
             onError?.();
           }}
           className={`relative w-full h-full object-cover transition-all duration-700 ${
-            loaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
+            loaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-105"
           } rounded-md`}
         />
 
-        {/* overlay */}
+        {/* blue frosted overlay */}
         {!loaded && (
           <div className="absolute inset-0 bg-white bg-opacity-50 backdrop-blur-2xl rounded-md z-10" />
         )}
 
         <style>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
+          @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+          }
+        `}</style>
       </div>
     );
   }
 );
 
-export default function Necklace() {
+export default function Earrings() {
   const [loadedImages, setLoadedImages] = useState({});
   const [animateOnce, setAnimateOnce] = useState(false);
   const [failedImages, setFailedImages] = useState({});
@@ -76,48 +76,57 @@ export default function Necklace() {
   const intervalsRef = useRef({});
   const navigate = useNavigate();
 
-  // Fetch gold rate
+  // Fetch gold price per gram
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gold/latest-per-gram`)
       .then((res) => res.json())
       .then((data) => setGoldPricePerGram(data.pricePerGram))
-      .catch((err) => console.error("Failed to fetch gold price", err));
+      .catch((err) =>
+        console.error("Failed to fetch gold price per gram", err)
+      );
   }, []);
 
-  // orientation
+  // Device/orientation check
   useEffect(() => {
-    const check = () => {
-      setIsPortrait(window.matchMedia("(orientation: portrait)").matches);
-      setIsMobileOrTablet(window.innerWidth < 1024);
+    const checkOrientationAndDevice = () => {
+      const isPortraitNow = window.matchMedia(
+        "(orientation: portrait)"
+      ).matches;
+      setIsPortrait(isPortraitNow);
+      const width = window.innerWidth;
+      setIsMobileOrTablet(width < 1024);
     };
 
-    check();
-    window.addEventListener("resize", check);
-    window.addEventListener("orientationchange", check);
+    checkOrientationAndDevice();
+    window.addEventListener("resize", checkOrientationAndDevice);
+    window.addEventListener("orientationchange", checkOrientationAndDevice);
 
     return () => {
-      window.removeEventListener("resize", check);
-      window.removeEventListener("orientationchange", check);
+      window.removeEventListener("resize", checkOrientationAndDevice);
+      window.removeEventListener(
+        "orientationchange",
+        checkOrientationAndDevice
+      );
       Object.values(intervalsRef.current).forEach(clearInterval);
     };
   }, []);
 
-  useEffect(() => setAnimateOnce(true), []);
+  useEffect(() => {
+    setAnimateOnce(true);
+  }, []);
 
-  const handleLoad = (i, src) => {
-    setLoadedImages((prev) => ({ ...prev, [`${i}_${src}`]: true }));
+  const handleImageLoad = (index, src) => {
+    setLoadedImages((prev) => ({ ...prev, [`${index}_${src}`]: true }));
   };
 
-  const handleError = (i, src) => {
-    setFailedImages((prev) => ({ ...prev, [`${i}_${src}`]: true }));
+  const handleImageError = (index, src) => {
+    setFailedImages((prev) => ({ ...prev, [`${index}_${src}`]: true }));
   };
 
   const startSlideshow = (i, images) => {
     if (isMobileOrTablet) return;
     clearInterval(intervalsRef.current[i]);
-
     if (!images || images.length < 2) return;
-
     intervalsRef.current[i] = setInterval(() => {
       setActiveIndexes((prev) => ({
         ...prev,
@@ -132,14 +141,14 @@ export default function Necklace() {
     setActiveIndexes((prev) => ({ ...prev, [i]: 0 }));
   };
 
-  const handleCardClick = (necklace) => {
-    navigate("/necklaces/details", { state: { necklace } });
+  const handleCardClick = (earring) => {
+    navigate("/earrings/details", { state: { earring } });
   };
 
   return (
     <div className="px-6 pt-12 pb-8 md:pt-32 md:pb-20 new-font">
       <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 maroon-color">
-        Necklaces
+        Earrings
       </h2>
 
       <div
@@ -149,55 +158,53 @@ export default function Necklace() {
             : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
         } max-w-7xl mx-auto`}
       >
-        {necklacesData.map((necklace, i) => {
-          const images = necklace.images?.length
-            ? necklace.images
-            : [Necklace1];
+        {earringsData.map((earring, i) => {
+          const images = earring.images?.length ? earring.images : [Earring1];
           const activeIndex = activeIndexes[i] ?? 0;
           const src = images[activeIndex];
           const key = `${i}_${src}`;
           const isFailed = failedImages[key];
 
           const calculatedPrice =
-            goldPricePerGram && necklace.netWeight
-              ? Math.round(necklace.netWeight * goldPricePerGram * 1.18 * 1.03)
+            goldPricePerGram && earring.netWeight
+              ? Math.round(earring.netWeight * goldPricePerGram * 1.18 * 1.03)
               : null;
 
           return (
             <motion.div
-              key={necklace.id}
-              className={`bg-white rounded-md overflow-hidden shadow-md cursor-pointer transition-all duration-500 relative group ${
-                !isMobileOrTablet && "hover:shadow-xl"
+              key={earring.id}
+              className={`bg-white rounded-md overflow-hidden shadow-md transition-all duration-500 cursor-pointer relative group ${
+                !isMobileOrTablet ? "hover:shadow-xl" : ""
               }`}
               initial={!animateOnce ? { opacity: 0, y: 30 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.04 }}
               onMouseEnter={() => startSlideshow(i, images)}
               onMouseLeave={() => stopSlideshow(i)}
-              onClick={() => handleCardClick(necklace)}
+              onClick={() => handleCardClick(earring)}
             >
               <motion.div
                 className={`relative w-full ${
                   isPortrait ? "h-60" : "h-screen md:h-72 lg:h-80"
                 } overflow-hidden`}
+                whileHover={!isMobileOrTablet ? {} : {}}
                 transition={{ duration: 0.5 }}
               >
                 <AnimatePresence mode="wait">
                   <BlurOverlayImage
                     src={src}
-                    alt={necklace.name || "Necklace"}
+                    alt={earring.name || "Jewellery Item"}
                     isFailed={isFailed}
-                    onLoad={() => handleLoad(i, src)}
-                    onError={() => handleError(i, src)}
+                    onLoad={() => handleImageLoad(i, src)}
+                    onError={() => handleImageError(i, src)}
                   />
                 </AnimatePresence>
               </motion.div>
 
               <div className="p-3 text-center">
                 <p className="text-sm font-medium text-gray-700">
-                  {necklace.name}
+                  {earring.name}
                 </p>
-
                 <p className="text-lg font-semibold text-yellow-600 mt-1">
                   {calculatedPrice !== null ? (
                     `₹${calculatedPrice.toLocaleString()}`

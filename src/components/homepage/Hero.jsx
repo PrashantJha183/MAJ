@@ -5,19 +5,23 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import hero1 from "../../assets/compressed/MAJ_Desktop.jpg";
-import hero2 from "../../assets/compressed/MAJ Desktop 2.jpg";
+// import hero2 from "../../assets/compressed/MAJ Desktop 2.jpg";
 import hero4 from "../../assets/compressed/MAJ Desktop 4.jpg";
+import hero5 from "../../assets/MAJ Desktop 5.jpg";
+import hero6 from "../../assets/MAJ Desktop 6.jpg";
 
 import mobile1 from "../../assets/compressed/MAJ_Mobile_Banner.jpg";
-import mobile2 from "../../assets/compressed/MAJ Mobile Banner 2.jpg";
+// import mobile2 from "../../assets/compressed/MAJ Mobile Banner 2.jpg";
 import mobile4 from "../../assets/compressed/MAJ Mobile Banner 4.jpg";
+import mobile5 from "../../assets/MAJ Mobile banner 5.jpg";
+import mobile6 from "../../assets/MAJ Mobile Banner 6.jpg";
 
-const slidesDesktop = [hero4, hero1, hero2];
-const slidesMobile = [mobile1, mobile2, mobile4];
+const slidesDesktop = [hero4, hero1, hero5, hero6];
+const slidesMobile = [mobile1, mobile4, mobile5, mobile6];
 
 // Add link arrays (one link per slide). Edit paths as needed.
-const slidesDesktopLinks = ["/products", "/rings", "/products"];
-const slidesMobileLinks = ["/products", "/rings", "/products"];
+const slidesDesktopLinks = ["/products", "/earrings", "/maangtikas", "rings"];
+const slidesMobileLinks = ["/products", "/earrings", "/maangtikas", "rings"];
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);

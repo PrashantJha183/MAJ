@@ -79,7 +79,10 @@ const Footer = () => {
             </div>
 
             {/* Text */}
-            <h1 className="text-xl md:text-3xl font-bold text-white">
+            <h1
+              className="text-xl md:text-3xl font-bold text-white"
+              style={{ fontFamily: "Domine" }}
+            >
               Mahadeo Sah Amarnath Prasad Jewellers
             </h1>
           </Link>

@@ -1,19 +1,19 @@
-// components/pages/Jewellery/NecklaceDetails.jsx
+// components/pages/Jewellery/EarringDetails.jsx
 import React, { useState, useCallback, useEffect, memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
-const NecklaceDetails = memo(() => {
+const EarringDetails = memo(() => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const necklace = state?.necklace;
+  const earring = state?.earring;
   const [currentImage, setCurrentImage] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
   const [goldPricePerGram, setGoldPricePerGram] = useState(null);
 
-  if (!necklace) {
-    navigate("/necklaces");
+  if (!earring) {
+    navigate("/earrings");
     return null;
   }
 
@@ -21,9 +21,7 @@ const NecklaceDetails = memo(() => {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/gold/latest-per-gram`)
       .then((res) => res.json())
-      .then((data) => {
-        setGoldPricePerGram(data.pricePerGram);
-      })
+      .then((data) => setGoldPricePerGram(data.pricePerGram))
       .catch((err) =>
         console.error("Failed to fetch gold price per gram", err)
       );
@@ -31,7 +29,7 @@ const NecklaceDetails = memo(() => {
 
   // Preload images
   useEffect(() => {
-    necklace.images.forEach((src) => {
+    earring.images.forEach((src) => {
       const img = new Image();
       img.src = src;
       img.onload = () =>
@@ -40,23 +38,23 @@ const NecklaceDetails = memo(() => {
           [src]: true,
         }));
     });
-  }, [necklace.images]);
+  }, [earring.images]);
 
   // Image navigation
   const nextImage = useCallback(() => {
-    setCurrentImage((prev) => (prev + 1) % necklace.images.length);
-  }, [necklace.images.length]);
+    setCurrentImage((prev) => (prev + 1) % earring.images.length);
+  }, [earring.images.length]);
 
   const prevImage = useCallback(() => {
     setCurrentImage((prev) =>
-      prev === 0 ? necklace.images.length - 1 : prev - 1
+      prev === 0 ? earring.images.length - 1 : prev - 1
     );
-  }, [necklace.images.length]);
+  }, [earring.images.length]);
 
   // Pricing calculation
   const goldCost =
-    goldPricePerGram && necklace.netWeight
-      ? necklace.netWeight * goldPricePerGram
+    goldPricePerGram && earring.netWeight
+      ? earring.netWeight * goldPricePerGram
       : 0;
   const makingCharges = goldCost * 0.18; // 18%
   const subtotal = goldCost + makingCharges;
@@ -72,7 +70,7 @@ const NecklaceDetails = memo(() => {
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-gray-600 hover:text-yellow-600 transition"
           >
-            <ArrowLeft size={20} /> Back to Necklaces
+            <ArrowLeft size={20} /> Back to Earrings
           </button>
         </div>
 
@@ -81,12 +79,12 @@ const NecklaceDetails = memo(() => {
           <div className="relative w-full h-96 rounded-lg overflow-hidden shadow-md bg-gray-100 select-none">
             <AnimatePresence mode="wait">
               <motion.img
-                key={necklace.images[currentImage]}
-                src={necklace.images[currentImage]}
-                alt={`${necklace.name} - view ${currentImage + 1}`}
+                key={earring.images[currentImage]}
+                src={earring.images[currentImage]}
+                alt={`${earring.name} - view ${currentImage + 1}`}
                 draggable={false}
                 className={`w-full h-full object-cover transition-all duration-700 ease-in-out ${
-                  loadedImages[necklace.images[currentImage]]
+                  loadedImages[earring.images[currentImage]]
                     ? "blur-0 scale-100 opacity-100"
                     : "blur-md scale-105 opacity-70"
                 }`}
@@ -129,7 +127,7 @@ const NecklaceDetails = memo(() => {
             {/* Dots */}
             <div className="absolute bottom-3 w-full flex justify-center items-center">
               <div className="flex gap-2">
-                {necklace.images.map((_, index) => (
+                {earring.images.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImage(index)}
@@ -153,7 +151,7 @@ const NecklaceDetails = memo(() => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              {necklace.name}
+              {earring.name}
             </motion.h1>
 
             {/* Net Weight */}
@@ -164,7 +162,7 @@ const NecklaceDetails = memo(() => {
               transition={{ delay: 0.25, duration: 0.6 }}
             >
               Net Weight:{" "}
-              {necklace.netWeight ? `${necklace.netWeight} grams` : "N/A"}
+              {earring.netWeight ? `${earring.netWeight} grams` : "N/A"}
             </motion.p>
 
             {/* Pricing Breakdown */}
@@ -189,7 +187,7 @@ const NecklaceDetails = memo(() => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              {necklace.description}
+              {earring.description}
             </motion.p>
 
             <motion.button
@@ -207,4 +205,4 @@ const NecklaceDetails = memo(() => {
   );
 });
 
-export default NecklaceDetails;
+export default EarringDetails;

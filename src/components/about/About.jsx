@@ -1,29 +1,45 @@
-import React, { useEffect, useRef, memo, useState } from "react";
+import React, { useEffect, useRef, memo, useState, useMemo } from "react";
 import { motion, useInView } from "framer-motion";
-import { Award, ShieldCheck, Gem, Users } from "lucide-react";
 
+// Lazy-load icons (lighter memory footprint)
+const AwardIcon = React.lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Award }))
+);
+const GemIcon = React.lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Gem }))
+);
+const UsersIcon = React.lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.Users }))
+);
+const ShieldCheckIcon = React.lazy(() =>
+  import("lucide-react").then((m) => ({ default: m.ShieldCheck }))
+);
+
+// Images frozen to avoid reallocation
 import member1 from "../../assets/DSC_8896.JPG";
 import member2 from "../../assets/DSC_8896.JPG";
 import member3 from "../../assets/DSC_8896.JPG";
 import member4 from "../../assets/DSC_8896.JPG";
 
-// Stats data
-const stats = [
-  { label: "Years of Legacy", value: 100, suffix: "+", icon: Award },
-  { label: "Unique Designs", value: 1500, suffix: "+", icon: Gem },
-  { label: "Delighted Customers", value: 10000, suffix: "+", icon: Users },
-  { label: "Certified Quality", value: 100, suffix: "%", icon: ShieldCheck },
-];
+Object.freeze(member1);
+Object.freeze(member2);
+Object.freeze(member3);
+Object.freeze(member4);
 
-// Board Members data
-// const boardMembers = [
-//   { name: "John Doe", role: "Founder & CEO", photo: member1 },
-//   { name: "Jane Smith", role: "Head Designer", photo: member2 },
-//   { name: "Robert Johnson", role: "Operations Head", photo: member3 },
-//   { name: "Emily Davis", role: "Marketing Lead", photo: member4 },
-// ];
+// Memoized constant stats
+const statsData = Object.freeze([
+  { label: "Years of Legacy", value: 100, suffix: "+", icon: AwardIcon },
+  { label: "Unique Designs", value: 1500, suffix: "+", icon: GemIcon },
+  { label: "Delighted Customers", value: 10000, suffix: "+", icon: UsersIcon },
+  {
+    label: "Certified Quality",
+    value: 100,
+    suffix: "%",
+    icon: ShieldCheckIcon,
+  },
+]);
 
-// StatItem Component
+// Counter Component -------------------------------------------------
 const StatItem = memo(({ stat, inView, delay }) => {
   const { label, value, suffix, icon: Icon } = stat;
   const [count, setCount] = useState(0);
@@ -35,20 +51,18 @@ const StatItem = memo(({ stat, inView, delay }) => {
     }
 
     let start = 0;
-    const duration = 2000;
-    const stepTime = Math.max(Math.floor(duration / value), 1);
+    let startTime = null;
+    const duration = 1800; // lighter than interval → smoother + low CPU
 
-    const timer = setInterval(() => {
-      start += Math.ceil(value / (duration / stepTime));
-      if (start >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
-    }, stepTime);
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * value));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
 
-    return () => clearInterval(timer);
+    const frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
   }, [inView, value]);
 
   return (
@@ -56,13 +70,15 @@ const StatItem = memo(({ stat, inView, delay }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0, scale: [0.9, 1.05, 1] } : {}}
       transition={{ delay, duration: 0.6 }}
-      className="flex flex-col items-center"
+      className="flex flex-col items-center new-font"
     >
       <div
         className="w-16 h-16 flex items-center justify-center rounded-full bg-amber-100 text-yellow-700 mb-3 shadow-lg hover:scale-110 transition-transform"
         aria-label={label}
       >
-        <Icon className="w-8 h-8" />
+        <React.Suspense fallback={<div className="w-8 h-8" />}>
+          <Icon className="w-8 h-8" />
+        </React.Suspense>
       </div>
       <h3 className="text-3xl md:text-4xl font-bold text-amber-800">
         {count}
@@ -73,48 +89,28 @@ const StatItem = memo(({ stat, inView, delay }) => {
   );
 });
 
-// BoardMember Card Component
-const BoardMember = memo(({ member, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0, scale: [0.95, 1.05, 1] }}
-    viewport={{ once: true, margin: "-100px" }}
-    transition={{ delay, duration: 0.6 }}
-    className="flex flex-col items-center text-center"
-  >
-    <div className="w-32 h-32 mb-3 overflow-hidden rounded-full border-4 border-amber-100 shadow-lg">
-      <img
-        src={member.photo}
-        alt={member.name}
-        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
-      />
-    </div>
-    <h4 className="text-lg md:text-xl font-semibold text-amber-800">
-      {member.name}
-    </h4>
-    <p className="text-gray-600 text-sm md:text-base">{member.role}</p>
-  </motion.div>
-));
-
+// About Component ---------------------------------------------------
 const About = memo(() => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-100px" });
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-  };
+  const fadeUp = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 50 },
+      visible: { opacity: 1, y: 0 },
+    }),
+    []
+  );
 
   return (
     <section
       id="about"
       ref={ref}
-      className="relative bg-white text-gray-800 py-16 md:py-24 overflow-hidden"
+      className="relative bg-white text-gray-800 py-16 md:py-24 overflow-hidden new-font"
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white via-amber-50/30 to-white pointer-events-none"></div>
 
@@ -139,28 +135,10 @@ const About = memo(() => {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-20">
-          {stats.map((stat, i) => (
+          {statsData.map((stat, i) => (
             <StatItem key={i} stat={stat} inView={isInView} delay={0.2 * i} />
           ))}
         </div>
-
-        {/* Board of Members */}
-        {/* <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={fadeUp}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h3 className="text-2xl md:text-3xl font-serif text-yellow-700 font-semibold mb-8">
-            Our Board of Members
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {boardMembers.map((member, i) => (
-              <BoardMember key={i} member={member} delay={0.2 * i} />
-            ))}
-          </div>
-        </motion.div> */}
 
         {/* Message Section */}
         <motion.div
@@ -185,5 +163,17 @@ const About = memo(() => {
     </section>
   );
 });
+
+// ---------------------------------------
+// SEO EXPORT (use in App SEO layout)
+// ---------------------------------------
+export const AboutSEO = {
+  title: "About Us | MAJ Jewellers - Since 1911",
+  description:
+    "Discover the legacy of MAJ Jewellers since 1911 — master craftsmanship, certified gold, trusted quality, and over 10,000+ happy customers.",
+  keywords:
+    "MAJ Jewellers, Gold Jewellery, About MAJ, Jewellery since 1911, Certified Gold, Indian Jewellery",
+  canonical: "/about",
+};
 
 export default About;

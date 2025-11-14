@@ -9,19 +9,25 @@ import nathani from "../../assets/compressed/DSC_8925.JPG";
 import earrings from "../../assets/compressed/DSC_9084.JPG";
 import necklace from "../../assets/compressed/DSC_9118.JPG";
 import managlsutra from "../../assets/compressed/DSC_9030.JPG";
-
+import necklaceSet from "/Jewellery/compressed/DSC_9040.JPG";
 const categoriesSource = [
   { name: "Rings", img: ring, alt: "Rings", link: "/rings" },
-  { name: "Necklaces", img: necklace, alt: "Necklaces", link: "/necklaces" },
-  { name: "Earrings", img: earrings, alt: "Earrings", link: "/products" },
+  { name: "Chain", img: necklace, alt: "Chain", link: "/chains" },
+  { name: "Earrings", img: earrings, alt: "Earrings", link: "/earrings" },
   {
     name: "Mangalsutra",
     img: managlsutra,
     alt: "Mangalsutra",
-    link: "/products",
+    link: "/mangalsutras",
   },
   { name: "Maangtika", img: maangtika, alt: "Maangtika", link: "/maangtikas" },
   { name: "Nath", img: nathani, alt: "Nathani", link: "/naths" },
+  {
+    name: "Necklace Set",
+    img: necklaceSet,
+    alt: "Necklace Set",
+    link: "/products",
+  },
 ];
 
 const FALLBACK_SRC =

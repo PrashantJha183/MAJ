@@ -1,58 +1,161 @@
 [
   {
     "id": 1,
-    "name": "G Nathiya",
-    "netWeight": 5.87,
+    "name": "G Jhala",
+    "netWeight": 7.57,
     "images": [
-      "/Jewellery/compressed/DSC_8924.JPG",
-      "/Jewellery/compressed/DSC_8925.JPG",
-      "/Jewellery/compressed/DSC_8926.JPG",
-      "/Jewellery/compressed/DSC_8927.JPG",
-      "/Jewellery/compressed/DSC_8928.JPG",
-      "/Jewellery/compressed/DSC_8929.JPG",
-      "/Jewellery/compressed/DSC_8930.JPG",
-      "/Jewellery/compressed/DSC_8931.JPG",
-      "/Jewellery/compressed/DSC_8932.JPG"
+      "/Jewellery/compressed/DSC_8968.JPG",
+      "/Jewellery/compressed/DSC_8969.JPG",
+      "/Jewellery/compressed/DSC_8970.JPG"
     ]
   },
   {
     "id": 2,
-    "name": "G Nathiya",
-    "netWeight": 10.3,
+    "name": "G Jhala",
+    "netWeight": 11.02,
     "images": [
-      "/Jewellery/compressed/DSC_8935.JPG",
-      "/Jewellery/compressed/DSC_8936.JPG",
-      "/Jewellery/compressed/DSC_8937.JPG",
-      "/Jewellery/compressed/DSC_8938.JPG"
+      "/Jewellery/compressed/DSC_8971.JPG",
+      "/Jewellery/compressed/DSC_8972.JPG",
+      "/Jewellery/compressed/DSC_8973.JPG",
+      "/Jewellery/compressed/DSC_8974.JPG"
     ]
   },
   {
     "id": 3,
-    "name": "G Nathiya",
-    "netWeight": 9.04,
+    "name": "GJH0630",
+    "netWeight": 16.5,
     "images": [
-      "/Jewellery/compressed/DSC_8941.JPG",
-      "/Jewellery/compressed/DSC_8942.JPG",
-      "/Jewellery/compressed/DSC_8943.JPG",
-      "/Jewellery/compressed/DSC_8946.JPG",
-      "/Jewellery/compressed/DSC_8947.JPG",
-      "/Jewellery/compressed/DSC_8948.JPG"
+      "/Jewellery/compressed/DSC_8975.JPG",
+      "/Jewellery/compressed/DSC_8976.JPG",
+      "/Jewellery/compressed/DSC_8977.JPG"
     ]
   },
   {
     "id": 4,
-    "name": "G Nathiya",
-    "netWeight": 5.02,
+    "name": "G Jhumka",
+    "netWeight": 11.83,
     "images": [
-      "/Jewellery/compressed/DSC_8949.JPG",
-      "/Jewellery/compressed/DSC_8952.JPG",
-      "/Jewellery/compressed/DSC_8953.JPG",
-      "/Jewellery/compressed/DSC_8954.JPG",
-      "/Jewellery/compressed/DSC_8955.JPG",
-      "/Jewellery/compressed/DSC_8956.JPG",
-      "/Jewellery/compressed/DSC_8957.JPG",
-      "/Jewellery/compressed/DSC_8958.JPG",
-      "/Jewellery/compressed/DSC_8959.JPG"
+      "/Jewellery/compressed/DSC_8978.JPG",
+      "/Jewellery/compressed/DSC_8979.JPG"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "JHU0026",
+    "netWeight": 17.99,
+    "images": [
+      "/Jewellery/compressed/DSC_8981.JPG",
+      "/Jewellery/compressed/DSC_8982.JPG"
+    ]
+  },
+
+  {
+    "id": 6,
+    "name": "JHU0021",
+    "netWeight": 17.99,
+    "images": [
+      "/Jewellery/compressed/DSC_8987.JPG",
+      "/Jewellery/compressed/DSC_8988.JPG",
+      "/Jewellery/compressed/DSC_8989.JPG"
+    ]
+  },
+
+  {
+    "id": 7,
+    "name": "G Jhumka",
+    "netWeight": 9.25,
+    "images": [
+      "/Jewellery/compressed/DSC_8990.JPG",
+      "/Jewellery/compressed/DSC_8991.JPG"
+    ]
+  },
+
+  {
+    "id": 8,
+    "name": "G Jhumka",
+    "netWeight": 16.63,
+    "images": [
+      "/Jewellery/compressed/DSC_8992.JPG",
+      "/Jewellery/compressed/DSC_8993.JPG",
+      "/Jewellery/compressed/DSC_8994.JPG"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "G Jhumka",
+    "netWeight": 12.08,
+    "images": [
+      "/Jewellery/compressed/DSC_8995.JPG",
+      "/Jewellery/compressed/DSC_8996.JPG"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "G Jhumka",
+    "netWeight": 10.45,
+    "images": [
+      "/Jewellery/compressed/DSC_8999.JPG",
+      "/Jewellery/compressed/DSC_9000.JPG",
+      "/Jewellery/compressed/DSC_9001.JPG",
+      "/Jewellery/compressed/DSC_9001.JPG"
+    ]
+  },
+
+  {
+    "id": 11,
+    "name": "G Jhala",
+    "netWeight": 14.85,
+    "images": ["/Jewellery/compressed/DSC_9066.JPG"]
+  },
+  {
+    "id": 12,
+    "name": "G Jhala",
+    "netWeight": 12.2,
+    "images": [
+      "/Jewellery/compressed/DSC_9068.JPG",
+      "/Jewellery/compressed/DSC_9069.JPG",
+      "/Jewellery/compressed/DSC_9070.JPG"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "GJH0180",
+    "netWeight": 17.99,
+    "images": [
+      "/Jewellery/compressed/DSC_9071.JPG",
+      "/Jewellery/compressed/DSC_9072.JPG",
+      "/Jewellery/compressed/DSC_9074.JPG"
+    ]
+  },
+
+  {
+    "id": 14,
+    "name": "G Jhala",
+    "netWeight": 11.45,
+    "images": [
+      "/Jewellery/compressed/DSC_9075.JPG",
+      "/Jewellery/compressed/DSC_9076.JPG"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "G Jhala",
+    "netWeight": 7.14,
+    "images": [
+      "/Jewellery/compressed/DSC_9077.JPG",
+      "/Jewellery/compressed/DSC_9078.JPG",
+      "/Jewellery/compressed/DSC_9079.JPG",
+      "/Jewellery/compressed/DSC_9080.JPG"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "G Jhala",
+    "netWeight": 6.52,
+    "images": [
+      "/Jewellery/compressed/DSC_9081.JPG",
+      "/Jewellery/compressed/DSC_9083.JPG",
+      "/Jewellery/compressed/DSC_9084.JPG"
     ]
   }
 ]

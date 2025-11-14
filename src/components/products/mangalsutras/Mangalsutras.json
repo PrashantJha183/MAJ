@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "G Pendal",
+    "netWeight": 30.83,
+    "images": [
+      "/Jewellery/compressed/DSC_9014.JPG",
+      "/Jewellery/compressed/DSC_9015.JPG",
+      "/Jewellery/compressed/DSC_9016.JPG",
+      "/Jewellery/compressed/DSC_9017.JPG"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "G Pendal",
+    "netWeight": 23.19,
+    "images": [
+      "/Jewellery/compressed/DSC_9018.JPG",
+      "/Jewellery/compressed/DSC_9019.JPG",
+      "/Jewellery/compressed/DSC_9020.JPG",
+      "/Jewellery/compressed/DSC_9022.JPG",
+      "/Jewellery/compressed/DSC_9023.JPG"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "G Pendal",
+    "netWeight": 18.14,
+    "images": [
+      "/Jewellery/compressed/DSC_9024.JPG",
+      "/Jewellery/compressed/DSC_9025.JPG",
+      "/Jewellery/compressed/DSC_9027.JPG"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "G Pendal",
+    "netWeight": 22.35,
+    "images": [
+      "/Jewellery/compressed/DSC_9029.JPG",
+      "/Jewellery/compressed/DSC_9030.JPG",
+      "/Jewellery/compressed/DSC_9032.JPG"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "G Pendal",
+    "netWeight": 22.24,
+    "images": [
+      "/Jewellery/compressed/DSC_9034.JPG",
+      "/Jewellery/compressed/DSC_9035.JPG",
+      "/Jewellery/compressed/DSC_9036.JPG"
+    ]
+  },
+
+  {
+    "id": 6,
+    "name": "G Pendal",
+    "netWeight": 12.56,
+    "images": [
+      "/Jewellery/compressed/DSC_9037.JPG",
+      "/Jewellery/compressed/DSC_9038.JPG",
+      "/Jewellery/compressed/DSC_9039.JPG"
+    ]
+  }
+]

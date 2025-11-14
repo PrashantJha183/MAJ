@@ -151,6 +151,29 @@ input[type="number"] {
 .admin-height {
   height: 60vh;
 }
+@keyframes smoothFade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  85% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+}
+
+.animate-smoothFade {
+  animation: smoothFade 4.5s ease-in-out forwards;
+}
+
 @media (min-width: 320px) and (max-width: 767px) {
   .screen-height {
     height: 80vh;
