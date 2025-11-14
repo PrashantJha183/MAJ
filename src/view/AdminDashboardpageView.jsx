@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect } from "react";
 import ErrorBoundary from "../components/base/ErrorBoundary";
 import SkeletonLoader from "../components/base/SkeletonLoader";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 // Lazy load Admin Dashboard
 const AdminDashboard = lazy(() => import("../components/admin/AdminDashboard"));

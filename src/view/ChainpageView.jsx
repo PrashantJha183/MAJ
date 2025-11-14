@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 import ErrorBoundary from "../components/base/ErrorBoundary";
 import SkeletonLoader from "../components/base/SkeletonLoader";
 
