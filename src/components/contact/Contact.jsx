@@ -111,9 +111,7 @@ const Contact = memo(() => {
 
                 <div>
                   <h4 className="font-semibold text-amber-800">Call Us</h4>
-                  <p className="text-gray-600">
-                    +91 9973172805 / +91 7011913993
-                  </p>
+                  <p className="text-gray-600">+91 82280 44555</p>
                 </div>
               </div>
             </motion.div>
