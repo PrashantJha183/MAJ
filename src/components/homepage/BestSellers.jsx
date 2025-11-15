@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense, lazy, memo } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { BadgeCheck, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // added for navigation
 
 // Lazy-load heavy image component (code-splitting)
 const ImageWithPlaceholder = lazy(() => import("../base/ImageWithPlaceholder"));
@@ -12,11 +13,12 @@ import necklace from "/Jewellery/compressed/DSC_9041.JPG";
 import earrings from "/Jewellery/compressed/DSC_8974.JPG";
 import mangalsutra from "/Jewellery/compressed/DSC_9010.JPG";
 
+// Add category for correct routing
 const bestSellers = [
-  { id: 1, name: "Ring", img: ring },
-  { id: 2, name: "Necklace Set", img: necklace },
-  { id: 3, name: "Earrings Set", img: earrings },
-  { id: 4, name: "Mangalsutra", img: mangalsutra },
+  { id: 1, name: "Ring", img: ring, category: "rings" },
+  { id: 2, name: "Necklace Set", img: necklace, category: "necklaces" },
+  { id: 3, name: "Earrings Set", img: earrings, category: "earrings" },
+  { id: 4, name: "Mangalsutra", img: mangalsutra, category: "mangalsutras" },
 ];
 
 // Simple skeleton shimmer loader
@@ -31,11 +33,13 @@ const Skeleton = ({
 );
 
 const BestSellers = () => {
+  const navigate = useNavigate(); // for navigation
+
   // Trigger animation only once (not every scroll)
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   const [isLoading, setIsLoading] = useState(true);
-  const [hasAnimated, setHasAnimated] = useState(false); // ✅ tracks if animation already played
+  const [hasAnimated, setHasAnimated] = useState(false); // tracks if animation already played
 
   useEffect(() => {
     // Simulate small loading phase for text (real-world: API fetch)
@@ -74,6 +78,9 @@ const BestSellers = () => {
     },
   };
 
+  // helper to get category-based path
+  const getProductPath = (product) => `/${product.category}`;
+
   return (
     <section ref={ref} className="px-4 py-12 max-w-7xl mx-auto new-font">
       <h2 className="text-3xl font-bold mb-8 text-center maroon-color">
@@ -103,7 +110,12 @@ const BestSellers = () => {
                 </div>
               }
             >
-              <ImageWithPlaceholder src={product.img} alt={product.name} />
+              <div
+                onClick={() => navigate(getProductPath(product))}
+                className="cursor-pointer"
+              >
+                <ImageWithPlaceholder src={product.img} alt={product.name} />
+              </div>
             </Suspense>
 
             <div className="p-4 flex flex-col gap-2">

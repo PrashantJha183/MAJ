@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect, memo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import Hm916Icon from "../../../assets/hm916.jpeg";
 
 const MaangtikaDetails = memo(() => {
   const { state } = useLocation();
@@ -11,6 +12,7 @@ const MaangtikaDetails = memo(() => {
   const [currentImage, setCurrentImage] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
   const [goldPricePerGram, setGoldPricePerGram] = useState(null);
+  const [activeTab, setActiveTab] = useState("description"); // "description" or "pricing"
 
   if (!maangtika) {
     navigate("/maangtikas");
@@ -165,36 +167,122 @@ const MaangtikaDetails = memo(() => {
               {maangtika.netWeight ? `${maangtika.netWeight} grams` : "N/A"}
             </motion.p>
 
-            {/* Pricing Breakdown */}
+            {/* Toggle Buttons */}
+            <div className="mt-6 flex gap-2 bg-gray-100 rounded-md overflow-hidden">
+              <button
+                onClick={() => setActiveTab("description")}
+                className={`flex-1 py-2 text-center font-medium transition ${
+                  activeTab === "description"
+                    ? "bg-yellow-600 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                Description
+              </button>
+              <button
+                onClick={() => setActiveTab("pricing")}
+                className={`flex-1 py-2 text-center font-medium transition ${
+                  activeTab === "pricing"
+                    ? "bg-yellow-600 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                Pricing
+              </button>
+            </div>
+
+            {/* Tab Content */}
             <motion.div
-              className="mt-4 text-gray-700 space-y-1"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              className="mt-4 p-4 bg-gray-50 rounded-md shadow-inner min-h-[150px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              <p>Gold Price = ₹{goldCost.toLocaleString()}</p>
-              <p>Making Charges = ₹{makingCharges.toLocaleString()}</p>
-              <p>Subtotal = ₹{subtotal.toLocaleString()}</p>
-              <p>GST = ₹{gst.toLocaleString()}</p>
-              <p className="font-semibold text-yellow-600 text-lg mt-2">
-                Final Price = ₹{finalPrice.toLocaleString()}
-              </p>
+              {activeTab === "description" ? (
+                <motion.table
+                  className="w-full text-gray-700 border-collapse"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">Gold Used</td>
+                      <td className="py-2 text-right">22K</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">Hallmark</td>
+                      <td className="py-2">
+                        <div className="flex flex-col items-end gap-0 md:flex-row md:items-center md:justify-end md:gap-2">
+                          <img
+                            src={Hm916Icon}
+                            alt="916 Hallmark"
+                            className="w-5 h-5 object-contain"
+                          />
+                          <span className="block md:hidden text-right">
+                            916 Hallmark
+                          </span>
+                          <span className="block md:hidden text-right">
+                            Certified
+                          </span>
+                          <span className="hidden md:inline">
+                            916 Hallmark Certified
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </motion.table>
+              ) : (
+                <motion.table
+                  className="w-full text-gray-700 border-collapse"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">Gold Price</td>
+                      <td className="py-2 text-right">
+                        ₹{goldCost.toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">Making Charges</td>
+                      <td className="py-2 text-right">
+                        ₹{makingCharges.toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">Subtotal</td>
+                      <td className="py-2 text-right">
+                        ₹{subtotal.toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-medium">GST (3%)</td>
+                      <td className="py-2 text-right">
+                        ₹{gst.toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="border-t font-semibold text-yellow-600 text-lg">
+                      <td className="py-2">Final Price</td>
+                      <td className="py-2 text-right">
+                        ₹{finalPrice.toLocaleString()}
+                      </td>
+                    </tr>
+                  </tbody>
+                </motion.table>
+              )}
             </motion.div>
 
-            <motion.p
-              className="mt-6 text-gray-600 leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-            >
-              {maangtika.description}
-            </motion.p>
-
+            {/* Centered Enquire Button */}
             <motion.button
-              className="mt-8 px-6 py-3 bg-yellow-600 text-white font-medium rounded-md hover:bg-yellow-700 transition"
+              className="mt-6 px-6 py-3 bg-yellow-600 text-white font-medium rounded-md hover:bg-yellow-700 transition mx-auto block"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
+              onClick={() => navigate("/contact")}
             >
               Enquire Now
             </motion.button>

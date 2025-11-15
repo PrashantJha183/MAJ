@@ -1,5 +1,5 @@
 // components/base/Header.jsx
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Info, Phone } from "lucide-react";
 import Logo from "../../assets/compressed/MAJ_Logo_for_Web.png";
@@ -10,6 +10,7 @@ import earrings from "../../assets/compressed/DSC_9084.JPG";
 import necklace from "../../assets/compressed/DSC_9118.JPG";
 import managlsutra from "../../assets/compressed/DSC_9030.JPG";
 import necklaceSet from "/Jewellery/compressed/DSC_9040.JPG";
+
 const categoriesSource = [
   { name: "Rings", img: ring, alt: "Rings", link: "/rings" },
   { name: "Chain", img: necklace, alt: "Chain", link: "/chains" },
@@ -60,15 +61,40 @@ const CategoryItem = React.memo(function CategoryItem({ item }) {
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [animating, setAnimating] = useState(false); // prevents double-click race
+  const [animating, setAnimating] = useState(false);
   const location = useLocation();
   const categories = useMemo(() => categoriesSource, []);
+  const [logoLoaded, setLogoLoaded] = useState(false);
+
+  // GOLD PRICE STATE
+  const [goldPrice, setGoldPrice] = useState(null);
+  const [fetchingGold, setFetchingGold] = useState(true);
+
+  useEffect(() => {
+    const fetchGold = async () => {
+      try {
+        setFetchingGold(true);
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/gold/latest-per-gram`
+        );
+        const data = await res.json();
+        setGoldPrice(data.pricePerGram);
+      } catch (err) {
+        console.error("Failed to fetch gold price:", err);
+      } finally {
+        setFetchingGold(false);
+      }
+    };
+    fetchGold();
+    const interval = setInterval(fetchGold, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const toggleMenu = useCallback(() => {
-    if (animating) return; // block rapid clicks
+    if (animating) return;
     setAnimating(true);
     setMenuOpen((prev) => !prev);
-    setTimeout(() => setAnimating(false), 300); // matches transition duration
+    setTimeout(() => setAnimating(false), 300);
   }, [animating]);
 
   const closeMenu = useCallback(() => {
@@ -77,8 +103,6 @@ const Header = () => {
     setMenuOpen(false);
     setTimeout(() => setAnimating(false), 300);
   }, [animating]);
-
-  const [logoLoaded, setLogoLoaded] = useState(false);
 
   return (
     <>
@@ -112,7 +136,6 @@ const Header = () => {
                   onError={(e) => (e.currentTarget.src = FALLBACK_SRC)}
                 />
               </div>
-
               <div
                 className="hidden md:flex flex-col"
                 style={{ fontFamily: "Domine" }}
@@ -130,9 +153,28 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* RIGHT - Nav */}
-          <div className="flex-1 flex justify-end items-center">
-            {/* Desktop Nav */}
+          {/* MOBILE GOLD PRICE */}
+          <div className="md:hidden flex-1 flex justify-center items-center gap-2 rounded-full border border-yellow-500 bg-yellow-50">
+            <span className="font-semibold maroon-color text-sm"></span>
+            <span className="font-bold text-yellow-600">
+              {fetchingGold ? (
+                <span className="animate-pulse">Fetching...</span>
+              ) : goldPrice ? (
+                `₹${goldPrice.toLocaleString()}`
+              ) : (
+                "N/A"
+              )}
+              /g
+            </span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                fetchingGold ? "bg-green-500 animate-pulse" : "bg-red-600"
+              }`}
+            />
+          </div>
+
+          {/* RIGHT - Nav & Desktop GOLD PRICE */}
+          <div className="flex-1 flex justify-end items-center ">
             <nav className="hidden md:flex items-center space-x-6 font-medium">
               <Link
                 to="/"
@@ -154,16 +196,38 @@ const Header = () => {
               >
                 About Us
               </Link>
-              <Link
-                to="/contact"
-                className={`hover:text-yellow-600 transition-all ${
-                  location.pathname === "/contact"
-                    ? "text-yellow-700 border-b-2 border-yellow-700 pb-1"
-                    : ""
-                }`}
-              >
-                Contact Us
-              </Link>
+
+              {/* Contact + Gold capsule */}
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/contact"
+                  className={`hover:text-yellow-600 transition-all ${
+                    location.pathname === "/contact"
+                      ? "text-yellow-700 border-b-2 border-yellow-700 pb-1"
+                      : ""
+                  }`}
+                >
+                  Contact Us
+                </Link>
+
+                <span className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500 bg-yellow-50 font-medium text-sm select-none cursor-default ml-1">
+                  <span className="font-bold text-yellow-600">
+                    {fetchingGold ? (
+                      <span className="animate-pulse">Fetching...</span>
+                    ) : goldPrice ? (
+                      `₹${goldPrice.toLocaleString()}`
+                    ) : (
+                      "N/A"
+                    )}
+                    /g
+                  </span>
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      fetchingGold ? "bg-green-500 animate-ping" : "bg-red-600"
+                    }`}
+                  />
+                </span>
+              </div>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -256,7 +320,6 @@ const Header = () => {
             <Home className="w-6 h-6" />
             <span className="text-xs font-medium">Home</span>
           </Link>
-
           <Link
             to="/contact"
             onClick={closeMenu}
@@ -269,7 +332,6 @@ const Header = () => {
             <Phone className="w-6 h-6" />
             <span className="text-xs font-medium">Contact</span>
           </Link>
-
           <Link
             to="/about"
             onClick={closeMenu}

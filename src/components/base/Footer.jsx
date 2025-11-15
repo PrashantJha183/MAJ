@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Facebook, Instagram } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import Logo from "../../assets/MAJ Logo FIle.svg";
 import { Link } from "react-router-dom";
 
 const footerLinks = [
   { label: "About Us", link: "/about" },
-  { label: "Collections", link: "/products" },
   { label: "Contact", link: "/contact" },
-  { label: "Terms & Conditions", link: "/products" },
-  { label: "Privacy Policy", link: "/products" },
   { label: "Login", link: "/login" },
+  { label: "Rings", link: "/rings" },
+  { label: "Earrings", link: "/earring" },
+  { label: "Chain", link: "/chains" },
 ];
 
 const socialLinks = [
@@ -22,6 +23,11 @@ const socialLinks = [
     icon: Instagram,
     href: "https://www.instagram.com/maj_rajnagar",
     label: "Instagram",
+  },
+  {
+    icon: FaWhatsapp,
+    href: "https://wa.me/919431643733",
+    label: "WhatsApp",
   },
 ];
 
@@ -86,11 +92,6 @@ const Footer = () => {
               Mahadeo Sah Amarnath Prasad Jewellers
             </h1>
           </Link>
-
-          {/* <p className="hidden sm:block text-gray-100 text-sm md:text-base leading-relaxed mt-4 text-center">
-            Crafting timeless jewelry since 1911 celebrating trust, heritage,
-            and exquisite craftsmanship across generations.
-          </p> */}
         </div>
 
         {/* Column 2: Quick Links (first 3 links) */}
@@ -116,7 +117,7 @@ const Footer = () => {
         {/* Column 3: More Links (last 3 links) */}
         <nav className="flex-1 md:text-center" aria-label="More Links">
           <h3 className="font-semibold mb-3 text-gray-100 text-lg">
-            More Links
+            Collections
           </h3>
           <ul className="flex flex-col gap-2">
             {footerLinks.slice(3).map((link, idx) => (
@@ -162,7 +163,7 @@ const Footer = () => {
           {/* Copyright */}
           <div className="order-2 md:order-1 w-full md:w-1/3 flex justify-center md:justify-start">
             <p>
-              © {currentYear} Mahadeo Sah Amarnath Jewellers — All Rights
+              © {currentYear} Mahadeo Sah Amarnath Jewellers All Rights
               Reserved.
             </p>
           </div>

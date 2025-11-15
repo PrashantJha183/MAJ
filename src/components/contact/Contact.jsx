@@ -173,7 +173,7 @@ const Contact = memo(() => {
 
           {/* WhatsApp */}
           <motion.a
-            href="https://wa.me/919973172805"
+            href="https://wa.me/919431643733"
             target="_blank"
             rel="noopener noreferrer"
             initial={{ opacity: 0, x: -50 }}

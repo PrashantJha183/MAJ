@@ -7,6 +7,7 @@ import React, {
   Suspense,
 } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import image from "/Jewellery/compressed/DSC_8896.JPG";
 import anniversary from "/Jewellery/compressed/DSC_9066.JPG";
 import wedding from "/Jewellery/compressed/DSC_9062.JPG";
@@ -29,6 +30,14 @@ const IMAGES = [
     alt: "Engagement gift",
   },
 ];
+
+// --- Map to your existing routes ---
+const ROUTE_MAP = {
+  birthday: "/maangtikas",
+  wedding: "/necklaces",
+  anniversary: "/earrings",
+  engagement: "/rings",
+};
 
 // --- Preload helper ---
 function preloadImage(src) {
@@ -56,13 +65,14 @@ function useIsTouchDevice() {
 
 // --- Card Component ---
 const Card = memo(({ item, showTextAlways, playOnce }) => {
+  const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
   const handleImgLoad = useCallback(() => setLoaded(true), []);
 
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-md shadow-md bg-white-40 backdrop-blur-sm"
-      // Animation setup
+      className="group relative overflow-hidden rounded-md shadow-md bg-white-40 backdrop-blur-sm cursor-pointer"
+      onClick={() => navigate(ROUTE_MAP[item.id])} // navigate to existing route
       initial={{ opacity: 0, y: 40, scale: 0.96 }}
       animate={playOnce ? { opacity: 1, y: 0, scale: 1 } : {}}
       whileInView={!playOnce ? { opacity: 1, y: 0, scale: 1 } : {}}
@@ -73,24 +83,21 @@ const Card = memo(({ item, showTextAlways, playOnce }) => {
         mass: 0.8,
         duration: 0.8,
       }}
-      viewport={{ once: playOnce, amount: 0.3 }} // Only play once if requested
+      viewport={{ once: playOnce, amount: 0.3 }}
       whileHover={!showTextAlways ? { scale: 1.02 } : {}}
     >
-      {/* Skeleton shimmer loader */}
       {!loaded && (
         <div className="absolute inset-0 bg-gray-300/40 animate-pulse overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shine_1.8s_linear_infinite]" />
         </div>
       )}
 
-      {/* Soft blur placeholder */}
       <div
         className={`absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 blur-3xl scale-110 transition-all duration-700 ease-out ${
           loaded ? "opacity-0" : "opacity-100"
         }`}
       />
 
-      {/* Main Image */}
       <motion.img
         src={item.src}
         alt={item.alt}
@@ -107,7 +114,6 @@ const Card = memo(({ item, showTextAlways, playOnce }) => {
         style={{ willChange: "opacity, transform" }}
       />
 
-      {/* Text overlay */}
       <motion.div
         transition={{ type: "spring", stiffness: 100, damping: 14 }}
         className={`absolute bottom-0 md:bottom-2 left-0 w-full px-4 py-3 text-center text-white backdrop-blur-md transition-all duration-400 transform ${
@@ -121,7 +127,6 @@ const Card = memo(({ item, showTextAlways, playOnce }) => {
         </h3>
       </motion.div>
 
-      {/* Shine keyframes */}
       <style jsx>{`
         @keyframes shine {
           0% {
@@ -139,11 +144,10 @@ const Card = memo(({ item, showTextAlways, playOnce }) => {
 // Lazy-load Card
 const LazyCard = lazy(() => Promise.resolve({ default: Card }));
 
-// --- Main Gift Section ---
 export default function Gift() {
   const isTouch = useIsTouchDevice();
   const [loadedMap, setLoadedMap] = useState({});
-  const [hasAnimated, setHasAnimated] = useState(false); // Track animation status
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -154,7 +158,6 @@ export default function Gift() {
     })();
   }, []);
 
-  // Mark animation as played once (runs only on first render)
   useEffect(() => {
     if (!hasAnimated) setHasAnimated(true);
   }, [hasAnimated]);
@@ -163,7 +166,6 @@ export default function Gift() {
 
   return (
     <section className="new-font mx-auto px-4 py-12">
-      {/* Header animation (only once) */}
       <motion.header
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -182,7 +184,6 @@ export default function Gift() {
         </p>
       </motion.header>
 
-      {/* Cards */}
       <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center items-center max-w-6xl mx-auto">
         <Suspense
           fallback={
@@ -196,7 +197,7 @@ export default function Gift() {
               key={img.id}
               item={img}
               showTextAlways={isTouch}
-              playOnce={hasAnimated} // Pass down "play once" control
+              playOnce={hasAnimated}
             />
           ))}
         </Suspense>
