@@ -30,7 +30,7 @@ const Contact = memo(() => {
 
   const handleCallClick = () => {
     if (!isDesktop) {
-      window.location.href = "tel:+919973172805";
+      window.location.href = "tel:+91 919431643733";
     }
   };
 
@@ -111,7 +111,7 @@ const Contact = memo(() => {
 
                 <div>
                   <h4 className="font-semibold text-amber-800">Call Us</h4>
-                  <p className="text-gray-600">+91 82280 44555</p>
+                  <p className="text-gray-600">+91 919431643733</p>
                 </div>
               </div>
             </motion.div>
@@ -162,7 +162,7 @@ const Contact = memo(() => {
                 <div>
                   <h4 className="font-semibold text-amber-800">Visit Us</h4>
                   <p className="text-gray-600">
-                    Gandhi Chowk, Rajnagar, Madhubani, Bihar - 846004
+                    Gandhi Chowk, Rajnagar, Madhubani, Bihar - 847235
                   </p>
                 </div>
               </div>
