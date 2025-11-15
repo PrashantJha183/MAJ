@@ -218,57 +218,68 @@ export default function AdminDashboard() {
       <div className="p-6 md:p-10 mt-4 md:mt-20 admin-height relative new-font">
         <Toaster position="top-right" />
 
-        <div className="flex flex-wrap justify-around items-center mb-8 gap-4 relative">
-          <h1 className="text-lg md:text-3xl font-semibold maroon-color flex items-center gap-2">
-            <DollarSign className="w-6 h-6 maroon-color" />
-            <span className="sm:inline">Gold Price Dashboard</span>
-          </h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4 relative w-fll">
+          {/* MOBILE + DESKTOP TITLE + MOBILE BUTTONS IN SAME ROW */}
+          <div className="flex items-center justify-between w-full sm:w-auto flex-nowrap">
+            {/* LEFT: Dashboard Title */}
+            <h1 className="text-lg md:text-3xl font-semibold maroon-color flex items-center gap-2 flex-shrink-0">
+              <DollarSign className="w-6 h-6 maroon-color" />
 
-          <div className="flex flex-wrap justify-center sm:justify-end items-center gap-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 text-sm sm:text-base md:text-lg text-gray-700 font-medium">
-              <div className="flex items-center gap-2 sm:gap-2 mb-4 md:mb-0">
-                <CalendarDays className="w-5 h-5 sm:w-6 sm:h-6 maroon-color shrink-0" />
-                <span className="truncate">{currentDate}</span>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-2">
-                <Clock className="w-5 h-5 sm:w-6 sm:h-6 maroon-color shrink-0" />
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "65px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {currentTime}
-                </span>
-              </div>
-            </div>
+              {/* Mobile: Dashboard | Desktop: Dashboard */}
+              <span className="inline sm:hidden">Dashboard</span>
+              <span className="hidden sm:inline">Dashboard</span>
+            </h1>
 
-            <div className="flex gap-3 justify-center sm:justify-end w-full sm:w-auto mt-2 sm:mt-0">
+            {/* MOBILE BUTTONS — SAME ROW AS TITLE NOW */}
+            <div className="flex items-center gap-2 sm:hidden flex-shrink-0 ml-3">
               <button
                 onClick={() => navigate("/admin/gold-history")}
-                className="flex items-center justify-center gap-2 maroon-background text-white px-3 py-2 rounded-lg hover:opacity-90"
+                className="flex items-center justify-center maroon-background text-white p-2 rounded-lg"
               >
                 <History className="w-5 h-5" />
-                <span className="hidden md:inline">History</span>
               </button>
 
               <button
                 onClick={handleLogout}
-                className="flex items-center justify-center gap-2 border border-maroon maroon-color px-3 py-2 rounded-lg transition"
+                className="flex items-center justify-center border border-maroon maroon-color p-2 rounded-lg"
               >
                 <LogOut className="w-5 h-5" />
-                <span className="hidden md:inline">Logout</span>
               </button>
 
               <button
                 onClick={() => setShowChangePassword(true)}
-                className="flex items-center justify-center gap-2 border border-maroon maroon-background text-white px-3 py-2 rounded-lg transition"
+                className="flex items-center justify-center border border-maroon maroon-background text-white p-2 rounded-lg"
               >
                 <KeyRound className="w-5 h-5" />
-                <span className="hidden md:inline">Change Password</span>
               </button>
             </div>
+          </div>
+
+          {/* DESKTOP BUTTONS — unchanged */}
+          <div className="hidden sm:flex items-center gap-3">
+            <button
+              onClick={() => navigate("/admin/gold-history")}
+              className="flex items-center justify-center gap-2 maroon-background text-white px-3 py-2 rounded-lg hover:opacity-90"
+            >
+              <History className="w-5 h-5" />
+              <span className="hidden md:inline">History</span>
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center gap-2 border border-maroon maroon-color px-3 py-2 rounded-lg transition"
+            >
+              <LogOut className="w-5 h-5" />
+              <span className="hidden md:inline">Logout</span>
+            </button>
+
+            <button
+              onClick={() => setShowChangePassword(true)}
+              className="flex items-center justify-center gap-2 border border-maroon maroon-background text-white px-3 py-2 rounded-lg transition"
+            >
+              <KeyRound className="w-5 h-5" />
+              <span className="hidden md:inline">Change Password</span>
+            </button>
           </div>
         </div>
 
