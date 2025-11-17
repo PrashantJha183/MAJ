@@ -7,7 +7,7 @@ const Hero = lazy(() => import("../components/homepage/Hero"));
 const Gift = lazy(() => import("../components/homepage/Gift"));
 const Band = lazy(() => import("../components/homepage/Band"));
 const BestSellers = lazy(() => import("../components/homepage/BestSellers"));
-
+const Promotion = lazy(() => import("../components/homepage/Promotions"));
 // Preload components for instant load after Hero renders (unchanged)
 Hero.preload = () => import("../components/homepage/Hero");
 Gift.preload = () => import("../components/homepage/Gift");
@@ -86,6 +86,12 @@ const HomepageView = () => {
       <ErrorBoundary>
         <Suspense fallback={<SkeletonLoader />}>
           <BestSellers />
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary>
+        <Suspense fallback={<SkeletonLoader />}>
+          <Promotion />
         </Suspense>
       </ErrorBoundary>
 
